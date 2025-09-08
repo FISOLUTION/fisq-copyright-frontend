@@ -405,42 +405,44 @@ export default function Home() {
             <div className="overflow-x-auto">
               <Table style={{ minWidth: "1400px" }}>
                 <TableHeader className="bg-background sticky top-0 z-10">
-                  <TableRow>
-                    <TableHead rowSpan={2} className="w-12">
-                      <Checkbox
-                        checked={allSelected}
-                        onCheckedChange={handleSelectAll}
-                      />
+                  <TableRow className="hover:bg-transparent">
+                    <TableHead rowSpan={2} className="w-12 hover:bg-muted/50 transition-colors cursor-pointer relative">
+                      <div className="flex items-center justify-center h-full">
+                        <Checkbox
+                          checked={allSelected}
+                          onCheckedChange={handleSelectAll}
+                        />
+                      </div>
                     </TableHead>
                     <TableHead
                       colSpan={6}
-                      className="border-b-0 text-left font-semibold"
+                      className="border-b-0 text-left font-semibold hover:bg-muted/50 transition-colors cursor-default"
                     >
                       기본정보
                     </TableHead>
                     <TableHead
                       colSpan={9}
-                      className="border-b-0 text-left font-semibold"
+                      className="border-b-0 text-left font-semibold hover:bg-muted/50 transition-colors cursor-default"
                     >
                       메타정보
                     </TableHead>
                   </TableRow>
-                  <TableRow>
-                    <TableHead className="w-24">서명</TableHead>
-                    <TableHead className="w-32">저작물명</TableHead>
-                    <TableHead className="w-24">저작자명</TableHead>
-                    <TableHead className="w-28">출판사명</TableHead>
-                    <TableHead className="w-20">발행년도</TableHead>
-                    <TableHead className="w-24">저작권 구분</TableHead>
-                    <TableHead className="w-16">생년</TableHead>
-                    <TableHead className="w-16">몰년</TableHead>
-                    <TableHead className="w-20">KAC</TableHead>
-                    <TableHead className="w-40">ISNI</TableHead>
-                    <TableHead className="w-16">국적</TableHead>
-                    <TableHead className="w-20">역할어</TableHead>
-                    <TableHead className="w-32">거소 및 단체정보</TableHead>
-                    <TableHead className="w-28">권리자 불명여부</TableHead>
-                    <TableHead className="w-20">저작권 여부</TableHead>
+                  <TableRow className="hover:bg-transparent">
+                    <TableHead className="w-24 hover:bg-muted/50 transition-colors cursor-default">서명</TableHead>
+                    <TableHead className="w-32 hover:bg-muted/50 transition-colors cursor-default">저작물명</TableHead>
+                    <TableHead className="w-24 hover:bg-muted/50 transition-colors cursor-default">저작자명</TableHead>
+                    <TableHead className="w-28 hover:bg-muted/50 transition-colors cursor-default">출판사명</TableHead>
+                    <TableHead className="w-20 hover:bg-muted/50 transition-colors cursor-default">발행년도</TableHead>
+                    <TableHead className="w-24 hover:bg-muted/50 transition-colors cursor-default">저작권 구분</TableHead>
+                    <TableHead className="w-16 hover:bg-muted/50 transition-colors cursor-default">생년</TableHead>
+                    <TableHead className="w-16 hover:bg-muted/50 transition-colors cursor-default">몰년</TableHead>
+                    <TableHead className="w-20 hover:bg-muted/50 transition-colors cursor-default">KAC</TableHead>
+                    <TableHead className="w-40 hover:bg-muted/50 transition-colors cursor-default">ISNI</TableHead>
+                    <TableHead className="w-16 hover:bg-muted/50 transition-colors cursor-default">국적</TableHead>
+                    <TableHead className="w-20 hover:bg-muted/50 transition-colors cursor-default">역할어</TableHead>
+                    <TableHead className="w-32 hover:bg-muted/50 transition-colors cursor-default">거소 및 단체정보</TableHead>
+                    <TableHead className="w-28 hover:bg-muted/50 transition-colors cursor-default">권리자 불명여부</TableHead>
+                    <TableHead className="w-20 hover:bg-muted/50 transition-colors cursor-default">저작권 여부</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
