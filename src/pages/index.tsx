@@ -1,14 +1,47 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
-import { Upload, Download, RotateCcw, Plus, Search, X, Loader2 } from "lucide-react";
+import {
+  Download,
+  Loader2,
+  Plus,
+  RotateCcw,
+  Search,
+  Upload,
+  X,
+} from "lucide-react";
 import { PeriodicalPublication } from "@/types/periodical-publication";
 import Header from "@/components/Header";
 
@@ -23,7 +56,7 @@ const initialData: PeriodicalPublication[] = [
     copyrightCategory: "간행물",
   },
   {
-    id: "2", 
+    id: "2",
     signature: "간행-002",
     workTitle: "과학저널",
     authorName: "이과학",
@@ -48,16 +81,16 @@ export default function Home() {
     if (allSelected) {
       setSelectedItems([]);
     } else {
-      setSelectedItems(data.map(item => item.id));
+      setSelectedItems(data.map((item) => item.id));
     }
   };
 
   // 개별 아이템 선택/해제
   const handleSelectItem = (id: string) => {
-    setSelectedItems(prev => 
-      prev.includes(id) 
-        ? prev.filter(itemId => itemId !== id)
-        : [...prev, id]
+    setSelectedItems((prev) =>
+      prev.includes(id)
+        ? prev.filter((itemId) => itemId !== id)
+        : [...prev, id],
     );
   };
 
@@ -65,18 +98,30 @@ export default function Home() {
   const handleSearch = async () => {
     setIsSearching(true);
     setTimeout(() => {
-      setData(prev => prev.map(item => ({
-        ...item,
-        birthYear: "1970",
-        deathYear: "2030",
-        kac: `KAC${Math.floor(Math.random() * 1000).toString().padStart(3, '0')}`,
-        isni: `${Math.floor(Math.random() * 10000).toString().padStart(4, '0')}-${Math.floor(Math.random() * 10000).toString().padStart(4, '0')}-${Math.floor(Math.random() * 10000).toString().padStart(4, '0')}-${Math.floor(Math.random() * 10000).toString().padStart(4, '0')}`,
-        nationality: "한국",
-        roleDescription: "저작자",
-        residenceInfo: "서울특별시",
-        rightsHolderUnknown: "아니오",
-        copyrightStatus: "예"
-      })));
+      setData((prev) =>
+        prev.map((item) => ({
+          ...item,
+          birthYear: "1970",
+          deathYear: "2030",
+          kac: `KAC${Math.floor(Math.random() * 1000)
+            .toString()
+            .padStart(3, "0")}`,
+          isni: `${Math.floor(Math.random() * 10000)
+            .toString()
+            .padStart(4, "0")}-${Math.floor(Math.random() * 10000)
+            .toString()
+            .padStart(4, "0")}-${Math.floor(Math.random() * 10000)
+            .toString()
+            .padStart(4, "0")}-${Math.floor(Math.random() * 10000)
+            .toString()
+            .padStart(4, "0")}`,
+          nationality: "한국",
+          roleDescription: "저작자",
+          residenceInfo: "서울특별시",
+          rightsHolderUnknown: "아니오",
+          copyrightStatus: "예",
+        })),
+      );
       setIsSearching(false);
       toast.success("메타정보 검색이 완료되었습니다.");
     }, 1000);
@@ -93,16 +138,20 @@ export default function Home() {
       publicationYear: formData.get("publicationYear") as string,
       copyrightCategory: formData.get("copyrightCategory") as string,
     };
-    
-    setData(prev => [...prev, newItem]);
+
+    setData((prev) => [...prev, newItem]);
     setSingleAddOpen(false);
-    toast.success("새 항목이 추가되었습니다. '검색하기'를 눌러 메타정보를 채우세요.");
+    toast.success(
+      "새 항목이 추가되었습니다. '검색하기'를 눌러 메타정보를 채우세요.",
+    );
   };
 
   // 엑셀 업로드
   const handleExcelUpload = () => {
     setExcelUploadOpen(false);
-    toast.success("엑셀 파일이 업로드되었습니다. '검색하기'를 눌러 메타정보를 채우세요.");
+    toast.success(
+      "엑셀 파일이 업로드되었습니다. '검색하기'를 눌러 메타정보를 채우세요.",
+    );
   };
 
   // 엑셀 다운로드
@@ -119,30 +168,30 @@ export default function Home() {
 
   // 선택 제거
   const handleRemoveSelected = () => {
-    setData(prev => prev.filter(item => !selectedItems.includes(item.id)));
+    setData((prev) => prev.filter((item) => !selectedItems.includes(item.id)));
     setSelectedItems([]);
     toast.success(`${selectedItems.length}개 항목이 삭제되었습니다.`);
   };
 
   // 개별 행 삭제
   const handleDeleteRow = (id: string) => {
-    setData(prev => prev.filter(item => item.id !== id));
-    setSelectedItems(prev => prev.filter(itemId => itemId !== id));
+    setData((prev) => prev.filter((item) => item.id !== id));
+    setSelectedItems((prev) => prev.filter((itemId) => itemId !== id));
     toast.success("항목이 삭제되었습니다.");
   };
 
   return (
-    <div className="min-h-screen bg-background relative">
+    <div className="bg-background relative min-h-screen">
       {/* 로딩 오버레이 */}
       {isSearching && (
-        <div className="fixed inset-0 bg-background/80 backdrop-blur-[2px] z-50 flex items-center justify-center">
+        <div className="bg-background/80 fixed inset-0 z-50 flex items-center justify-center backdrop-blur-[2px]">
           <div className="flex flex-col items-center gap-4">
-            <Loader2 className="h-12 w-12 animate-spin text-primary" />
+            <Loader2 className="text-primary h-12 w-12 animate-spin" />
             <p className="text-lg font-medium">메타정보를 검색하는 중...</p>
           </div>
         </div>
       )}
-      
+
       <Header />
 
       {/* 메인 컨텐츠 */}
@@ -152,16 +201,18 @@ export default function Home() {
             <div className="flex items-center justify-between">
               <div>
                 <CardTitle className="text-xl">연속간행물</CardTitle>
-                <CardDescription>연속간행물 저작정보를 검색합니다.</CardDescription>
+                <CardDescription>
+                  연속간행물 저작정보를 검색합니다.
+                </CardDescription>
               </div>
-              
+
               {/* 툴바 버튼들 */}
-              <div className="flex gap-2 flex-wrap">
+              <div className="flex flex-wrap gap-2">
                 {/* 단건 추가하기 */}
                 <Dialog open={singleAddOpen} onOpenChange={setSingleAddOpen}>
                   <DialogTrigger asChild>
                     <Button size="sm">
-                      <Plus className="w-4 h-4 mr-2" />
+                      <Plus className="mr-2 h-4 w-4" />
                       단건 추가하기
                     </Button>
                   </DialogTrigger>
@@ -169,7 +220,7 @@ export default function Home() {
                     <DialogHeader className="mb-6">
                       <DialogTitle>단건 추가하기</DialogTitle>
                     </DialogHeader>
-                    <form 
+                    <form
                       onSubmit={(e) => {
                         e.preventDefault();
                         const formData = new FormData(e.currentTarget);
@@ -192,11 +243,19 @@ export default function Home() {
                         </div>
                         <div className="space-y-2">
                           <Label htmlFor="publisherName">출판사명</Label>
-                          <Input id="publisherName" name="publisherName" required />
+                          <Input
+                            id="publisherName"
+                            name="publisherName"
+                            required
+                          />
                         </div>
                         <div className="space-y-2">
                           <Label htmlFor="publicationYear">발행년도</Label>
-                          <Input id="publicationYear" name="publicationYear" required />
+                          <Input
+                            id="publicationYear"
+                            name="publicationYear"
+                            required
+                          />
                         </div>
                         <div className="space-y-2">
                           <Label htmlFor="copyrightCategory">저작권 구분</Label>
@@ -213,22 +272,27 @@ export default function Home() {
                         </div>
                       </div>
                       <div className="flex justify-end gap-2 pt-6">
-                        <Button type="button" variant="ghost" onClick={() => setSingleAddOpen(false)}>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          onClick={() => setSingleAddOpen(false)}
+                        >
                           취소
                         </Button>
-                        <Button type="submit">
-                          추가하기
-                        </Button>
+                        <Button type="submit">추가하기</Button>
                       </div>
                     </form>
                   </DialogContent>
                 </Dialog>
 
                 {/* 엑셀 업로드 */}
-                <Dialog open={excelUploadOpen} onOpenChange={setExcelUploadOpen}>
+                <Dialog
+                  open={excelUploadOpen}
+                  onOpenChange={setExcelUploadOpen}
+                >
                   <DialogTrigger asChild>
                     <Button size="sm">
-                      <Upload className="w-4 h-4 mr-2" />
+                      <Upload className="mr-2 h-4 w-4" />
                       엑셀 업로드
                     </Button>
                   </DialogTrigger>
@@ -238,17 +302,27 @@ export default function Home() {
                     </DialogHeader>
                     <div className="space-y-4">
                       {/* 드롭존 */}
-                      <div className="border-2 border-dashed border-border rounded-lg p-8 text-center">
-                        <Upload className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
-                        <p className="text-foreground mb-2">엑셀 파일을 드래그하거나 클릭하여 업로드</p>
-                        <p className="text-sm text-muted-foreground">*.xlsx, *.xls 파일만 지원</p>
-                        <input type="file" className="hidden" accept=".xlsx,.xls" />
-                        <p className="mt-2 text-sm text-blue-600">sample-data.xlsx</p>
+                      <div className="border-border rounded-lg border-2 border-dashed p-8 text-center">
+                        <Upload className="text-muted-foreground mx-auto mb-4 h-12 w-12" />
+                        <p className="text-foreground mb-2">
+                          엑셀 파일을 드래그하거나 클릭하여 업로드
+                        </p>
+                        <p className="text-muted-foreground text-sm">
+                          *.xlsx, *.xls 파일만 지원
+                        </p>
+                        <input
+                          type="file"
+                          className="hidden"
+                          accept=".xlsx,.xls"
+                        />
+                        <p className="mt-2 text-sm text-blue-600">
+                          sample-data.xlsx
+                        </p>
                       </div>
-                      
+
                       {/* 미리보기 테이블 */}
                       <div>
-                        <h4 className="font-medium mb-2">미리보기 (3행)</h4>
+                        <h4 className="mb-2 font-medium">미리보기 (3행)</h4>
                         <Table>
                           <TableHeader>
                             <TableRow>
@@ -290,68 +364,71 @@ export default function Home() {
                       </div>
                     </div>
                     <div className="flex justify-end gap-2 pt-4">
-                      <Button variant="ghost" onClick={() => setExcelUploadOpen(false)}>
+                      <Button
+                        variant="ghost"
+                        onClick={() => setExcelUploadOpen(false)}
+                      >
                         취소
                       </Button>
-                      <Button onClick={handleExcelUpload}>
-                        가져오기
-                      </Button>
+                      <Button onClick={handleExcelUpload}>가져오기</Button>
                     </div>
                   </DialogContent>
                 </Dialog>
 
                 {/* 검색하기 */}
-                <Button 
-                  size="sm" 
-                  onClick={handleSearch}
-                  disabled={isSearching}
-                >
-                  <Search className="w-4 h-4 mr-2" />
+                <Button size="sm" onClick={handleSearch} disabled={isSearching}>
+                  <Search className="mr-2 h-4 w-4" />
                   검색하기
                 </Button>
 
                 {/* 엑셀 다운로드 */}
                 <Button size="sm" onClick={handleExcelDownload}>
-                  <Download className="w-4 h-4 mr-2" />
+                  <Download className="mr-2 h-4 w-4" />
                   엑셀 다운로드
                 </Button>
 
                 {/* 초기화 */}
                 <Button size="sm" onClick={handleReset}>
-                  <RotateCcw className="w-4 h-4 mr-2" />
+                  <RotateCcw className="mr-2 h-4 w-4" />
                   초기화
                 </Button>
 
                 {/* 선택 제거 */}
-                <Button 
-                  size="sm" 
+                <Button
+                  size="sm"
                   onClick={handleRemoveSelected}
                   disabled={selectedItems.length === 0}
                 >
-                  <X className="w-4 h-4 mr-2" />
+                  <X className="mr-2 h-4 w-4" />
                   선택 제거
                 </Button>
               </div>
             </div>
           </CardHeader>
-          
+
           <CardContent>
             {/* 테이블 */}
             <div className="overflow-x-auto">
               <Table style={{ minWidth: "1400px" }}>
-                <TableHeader className="sticky top-0 bg-background z-10">
+                <TableHeader className="bg-background sticky top-0 z-10">
                   <TableRow>
                     <TableHead rowSpan={2} className="w-12">
-                      <Checkbox 
+                      <Checkbox
                         checked={allSelected}
                         onCheckedChange={handleSelectAll}
                       />
                     </TableHead>
-                    <TableHead colSpan={6} className="text-center border-b-0 font-semibold">
+                    <TableHead
+                      colSpan={6}
+                      className="border-b-0 text-center font-semibold"
+                    >
                       기본정보
                     </TableHead>
-                    <TableHead colSpan={9} className="text-center border-b-0 font-semibold">
-                      메타정보  
+                    <TableHead
+                      colSpan={9}
+                      className="border-b-0 text-center font-semibold"
+                    >
+                      메타정보
                     </TableHead>
                   </TableRow>
                   <TableRow>
@@ -376,7 +453,7 @@ export default function Home() {
                   {data.map((item) => (
                     <TableRow key={item.id}>
                       <TableCell>
-                        <Checkbox 
+                        <Checkbox
                           checked={selectedItems.includes(item.id)}
                           onCheckedChange={() => handleSelectItem(item.id)}
                         />
@@ -387,7 +464,7 @@ export default function Home() {
                       <TableCell>{item.publisherName}</TableCell>
                       <TableCell>{item.publicationYear}</TableCell>
                       <TableCell>{item.copyrightCategory}</TableCell>
-                      
+
                       {/* 메타정보 컬럼들 */}
                       <TableCell>{item.birthYear || ""}</TableCell>
                       <TableCell>{item.deathYear || ""}</TableCell>
@@ -398,7 +475,6 @@ export default function Home() {
                       <TableCell>{item.residenceInfo || ""}</TableCell>
                       <TableCell>{item.rightsHolderUnknown || ""}</TableCell>
                       <TableCell>{item.copyrightStatus || ""}</TableCell>
-                      
                     </TableRow>
                   ))}
                 </TableBody>
