@@ -406,8 +406,8 @@ export default function Home() {
               <Table style={{ minWidth: "1400px" }}>
                 <TableHeader className="bg-background sticky top-0 z-10">
                   <TableRow className="hover:bg-transparent">
-                    <TableHead rowSpan={2} className="w-12 hover:bg-muted/50 transition-colors cursor-pointer relative">
-                      <div className="flex items-center justify-center h-full">
+                    <TableHead rowSpan={2} className="hover:bg-muted/50 transition-colors cursor-pointer relative text-center p-0">
+                      <div className="flex items-center justify-center h-full w-full px-2">
                         <Checkbox
                           checked={allSelected}
                           onCheckedChange={handleSelectAll}
@@ -448,11 +448,13 @@ export default function Home() {
                 <TableBody>
                   {data.map((item) => (
                     <TableRow key={item.id}>
-                      <TableCell>
-                        <Checkbox
-                          checked={selectedItems.includes(item.id)}
-                          onCheckedChange={() => handleSelectItem(item.id)}
-                        />
+                      <TableCell className="text-center p-0">
+                        <div className="flex items-center justify-center h-full w-full px-2">
+                          <Checkbox
+                            checked={selectedItems.includes(item.id)}
+                            onCheckedChange={() => handleSelectItem(item.id)}
+                          />
+                        </div>
                       </TableCell>
                       <TableCell>{item.signature}</TableCell>
                       <TableCell>{item.workTitle}</TableCell>
