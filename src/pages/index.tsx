@@ -414,13 +414,13 @@ export default function Home() {
                     </TableHead>
                     <TableHead
                       colSpan={6}
-                      className="border-b-0 text-center font-semibold"
+                      className="border-b-0 text-left font-semibold"
                     >
                       기본정보
                     </TableHead>
                     <TableHead
                       colSpan={9}
-                      className="border-b-0 text-center font-semibold"
+                      className="border-b-0 text-left font-semibold"
                     >
                       메타정보
                     </TableHead>
