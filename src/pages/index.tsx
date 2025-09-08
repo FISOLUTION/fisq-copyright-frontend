@@ -173,12 +173,6 @@ export default function Home() {
     toast.success(`${selectedItems.length}개 항목이 삭제되었습니다.`);
   };
 
-  // 개별 행 삭제
-  const handleDeleteRow = (id: string) => {
-    setData((prev) => prev.filter((item) => item.id !== id));
-    setSelectedItems((prev) => prev.filter((itemId) => itemId !== id));
-    toast.success("항목이 삭제되었습니다.");
-  };
 
   return (
     <div className="bg-background relative min-h-screen">
