@@ -59,17 +59,17 @@ const basicColumns: BasicColumn[] = [
   { key: "author", label: "저작자명", width: "w-24" },
   { key: "publisher", label: "출판사명", width: "w-28" },
   { key: "publishYear", label: "발행년도", width: "w-20" },
-  { key: "imageInfo", label: "이미지 정보", width: "w-24" },
+  { key: "imageInfo", label: "이미지 정보", width: "w-30" },
 ];
 
 const metaColumns: MetaColumn[] = [
   { key: "authorType", label: "자료유형", width: "w-20" },
   { key: "birthYear", label: "생년", width: "w-16" },
   { key: "deathYear", label: "몰년", width: "w-16" },
-  { key: "controlNumber", label: "제어번호", width: "w-20" },
+  { key: "controlNumber", label: "제어번호", width: "w-30" },
   { key: "isni", label: "ISNI", width: "w-40" },
   { key: "lastAffiliation", label: "거소 및 단체정보", width: "w-32" },
-  { key: "remark", label: "비고", width: "w-20" },
+  { key: "remark", label: "비고", width: "w-40" },
 ];
 
 const formFields: FormField[] = [
