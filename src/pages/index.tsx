@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import useSWRMutation from "swr/mutation";
 import {
   Card,
   CardContent,
@@ -17,32 +18,18 @@ import BookSearchTable, {
 } from "@/components/search/BookSearchTable";
 import { FormField } from "@/components/search/SingleAddDialog";
 import { PreviewData } from "@/components/search/ExcelUploadDialog";
+import { searchPeriodicalApi } from "@/lib/api";
+import { PeriodicalSearchRequest } from "@/types/dtos/bookSearch";
 
 const initialData: PeriodicalPublication[] = [
   {
     id: "1",
-    author: "김문학",
-    bookTitle: "현대문학",
-    publisher: "문학사",
-    publishYear: "2020",
+    author: "박목월",
+    bookTitle: "광양만권 사람들",
+    publisher: "광양만권 사람들",
+    publishYear: "20080401",
     imageInfo: null,
-    articleTitle: "현대문학 기사",
-    authorType: null,
-    birthYear: null,
-    deathYear: null,
-    controlNumber: null,
-    isni: null,
-    lastAffiliation: null,
-    remark: null,
-  },
-  {
-    id: "2",
-    author: "이과학",
-    bookTitle: "과학저널",
-    publisher: "과학출판사",
-    publishYear: "2021",
-    imageInfo: null,
-    articleTitle: "과학 연구 논문",
+    articleTitle: "좋은 생각 : 4월의 노래",
     authorType: null,
     birthYear: null,
     deathYear: null,
@@ -111,7 +98,11 @@ const previewData: PreviewData[] = [
 export default function Home() {
   const [data, setData] = useState<PeriodicalPublication[]>(initialData);
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
-  const [isSearching, setIsSearching] = useState(false);
+
+  const { trigger: searchMeta, isMutating: isSearching } = useSWRMutation(
+    "/search-copyright/periodical",
+    searchPeriodicalApi,
+  );
 
   // 체크박스 관련 상태 계산
   const allSelected = data.length > 0 && selectedItems.length === data.length;
@@ -134,35 +125,59 @@ export default function Home() {
     );
   };
 
-  // 검색하기 (메타정보 채우기 시뮬레이션)
+  // 검색하기 (SWR을 사용한 API 검색)
   const handleSearch = async () => {
-    setIsSearching(true);
-    setTimeout(() => {
-      setData((prev) =>
-        prev.map((item) => ({
-          ...item,
-          authorType: Math.random() > 0.5 ? "개인" : "단체",
-          birthYear: "1970",
-          deathYear: "2030",
-          controlNumber: `KAC${Math.floor(Math.random() * 1000)
-            .toString()
-            .padStart(8, "0")}`,
-          isni: `${Math.floor(Math.random() * 10000)
-            .toString()
-            .padStart(4, "0")}-${Math.floor(Math.random() * 10000)
-            .toString()
-            .padStart(4, "0")}-${Math.floor(Math.random() * 10000)
-            .toString()
-            .padStart(4, "0")}-${Math.floor(Math.random() * 10000)
-            .toString()
-            .padStart(4, "0")}`,
-          lastAffiliation: "서울특별시",
-          remark: "저작권 확인됨",
+    try {
+      // 현재 데이터를 API 요청 형태로 변환
+      const request: PeriodicalSearchRequest = {
+        items: data.map((item) => ({
+          author: item.author,
+          bookTitle: item.bookTitle,
+          publisher: item.publisher,
+          publishYear: item.publishYear,
+          imageInfo: item.imageInfo,
+          articleTitle: item.articleTitle,
         })),
+      };
+
+      const response = await searchMeta(request);
+
+      // 성공한 항목들로 메타정보 업데이트
+      setData((prev) =>
+        prev.map((item, index) => {
+          const successItem = response.successItems.find(
+            (success) => success.index === index,
+          );
+          if (successItem) {
+            return {
+              ...item,
+              authorType: successItem.authorType,
+              birthYear: successItem.birthYear,
+              deathYear: successItem.deathYear,
+              controlNumber: successItem.controlNumber,
+              isni: successItem.isni,
+              lastAffiliation: successItem.lastAffiliation,
+              remark: successItem.remark,
+            };
+          }
+          return item;
+        }),
       );
-      setIsSearching(false);
-      toast.success("메타정보 검색이 완료되었습니다.");
-    }, 1000);
+
+      // 실패한 항목들 토스트로 알림
+      if (response.failedIndices.length > 0) {
+        const failedCount = response.failedIndices.length;
+        toast.error(
+          `${failedCount}개 항목의 메타정보 검색에 실패했습니다. (인덱스: ${response.failedIndices.join(", ")})`,
+        );
+      }
+
+      const successCount = response.successItems.length;
+      toast.success(`${successCount}개 항목의 메타정보 검색이 완료되었습니다.`);
+    } catch (error) {
+      console.error("Search error:", error);
+      toast.error("메타정보 검색 중 오류가 발생했습니다.");
+    }
   };
 
   // 단건 추가하기
