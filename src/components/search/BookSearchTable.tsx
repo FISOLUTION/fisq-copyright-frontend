@@ -23,7 +23,7 @@ export interface MetaColumn {
 
 export interface BookSearchData {
   id: string;
-  [key: string]: string | boolean | undefined;
+  [key: string]: string | boolean | number | null | undefined;
 }
 
 interface BookSearchTableProps<T extends BookSearchData> {

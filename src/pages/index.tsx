@@ -21,88 +21,90 @@ import { PreviewData } from "@/components/search/ExcelUploadDialog";
 const initialData: PeriodicalPublication[] = [
   {
     id: "1",
-    signature: "간행-001",
-    workTitle: "현대문학",
-    authorName: "김문학",
-    publisherName: "문학사",
-    publicationYear: "2020",
-    copyrightCategory: "간행물",
+    author: "김문학",
+    bookTitle: "현대문학",
+    publisher: "문학사",
+    publishYear: "2020",
+    imageInfo: null,
+    articleTitle: "현대문학 기사",
+    authorType: null,
+    birthYear: null,
+    deathYear: null,
+    controlNumber: null,
+    isni: null,
+    lastAffiliation: null,
+    remark: null,
   },
   {
     id: "2",
-    signature: "간행-002",
-    workTitle: "과학저널",
-    authorName: "이과학",
-    publisherName: "과학출판사",
-    publicationYear: "2021",
-    copyrightCategory: "학술지",
+    author: "이과학",
+    bookTitle: "과학저널",
+    publisher: "과학출판사",
+    publishYear: "2021",
+    imageInfo: null,
+    articleTitle: "과학 연구 논문",
+    authorType: null,
+    birthYear: null,
+    deathYear: null,
+    controlNumber: null,
+    isni: null,
+    lastAffiliation: null,
+    remark: null,
   },
 ];
 
 const basicColumns: BasicColumn[] = [
-  { key: "signature", label: "서명", width: "w-24" },
-  { key: "workTitle", label: "저작물명", width: "w-32" },
-  { key: "authorName", label: "저작자명", width: "w-24" },
-  { key: "publisherName", label: "출판사명", width: "w-28" },
-  { key: "publicationYear", label: "발행년도", width: "w-20" },
-  { key: "copyrightCategory", label: "저작권 구분", width: "w-24" },
+  { key: "bookTitle", label: "서명", width: "w-24" },
+  { key: "articleTitle", label: "저작물명", width: "w-32" },
+  { key: "author", label: "저작자명", width: "w-24" },
+  { key: "publisher", label: "출판사명", width: "w-28" },
+  { key: "publishYear", label: "발행년도", width: "w-20" },
+  { key: "imageInfo", label: "이미지 정보", width: "w-24" },
 ];
 
 const metaColumns: MetaColumn[] = [
+  { key: "authorType", label: "자료유형", width: "w-20" },
   { key: "birthYear", label: "생년", width: "w-16" },
   { key: "deathYear", label: "몰년", width: "w-16" },
-  { key: "kac", label: "KAC", width: "w-20" },
+  { key: "controlNumber", label: "제어번호", width: "w-20" },
   { key: "isni", label: "ISNI", width: "w-40" },
-  { key: "nationality", label: "국적", width: "w-16" },
-  { key: "roleDescription", label: "역할어", width: "w-20" },
-  { key: "residenceInfo", label: "거소 및 단체정보", width: "w-32" },
-  { key: "rightsHolderUnknown", label: "권리자 불명여부", width: "w-28" },
-  { key: "copyrightStatus", label: "저작권 여부", width: "w-20" },
+  { key: "lastAffiliation", label: "거소 및 단체정보", width: "w-32" },
+  { key: "remark", label: "비고", width: "w-20" },
 ];
 
 const formFields: FormField[] = [
-  { key: "signature", label: "서명", type: "text", required: true },
-  { key: "workTitle", label: "저작물명", type: "text", required: true },
-  { key: "authorName", label: "저작자명", type: "text", required: true },
-  { key: "publisherName", label: "출판사명", type: "text", required: true },
-  { key: "publicationYear", label: "발행년도", type: "text", required: true },
-  {
-    key: "copyrightCategory",
-    label: "저작권 구분",
-    type: "select",
-    required: true,
-    options: [
-      { value: "간행물", label: "간행물" },
-      { value: "학술지", label: "학술지" },
-      { value: "잡지", label: "잡지" },
-    ],
-  },
+  { key: "bookTitle", label: "서명", type: "text", required: true },
+  { key: "articleTitle", label: "저작물명", type: "text", required: true },
+  { key: "author", label: "저작자명", type: "text", required: true },
+  { key: "publisher", label: "출판사명", type: "text", required: true },
+  { key: "publishYear", label: "발행년도", type: "text", required: true },
+  { key: "imageInfo", label: "이미지 정보", type: "text", required: false },
 ];
 
 const previewData: PreviewData[] = [
   {
-    signature: "간행-003",
-    workTitle: "디자인 매거진",
-    authorName: "박디자인",
-    publisherName: "디자인출판",
-    publicationYear: "2022",
-    copyrightCategory: "잡지",
+    bookTitle: "디자인 매거진",
+    articleTitle: "디자인 트렌드",
+    author: "박디자인",
+    publisher: "디자인출판",
+    publishYear: "2022",
+    imageInfo: "",
   },
   {
-    signature: "간행-004",
-    workTitle: "건축 리뷰",
-    authorName: "최건축",
-    publisherName: "건축사",
-    publicationYear: "2023",
-    copyrightCategory: "학술지",
+    bookTitle: "건축 리뷰",
+    articleTitle: "현대 건축론",
+    author: "최건축",
+    publisher: "건축사",
+    publishYear: "2023",
+    imageInfo: "",
   },
   {
-    signature: "간행-005",
-    workTitle: "문화 소식",
-    authorName: "한문화",
-    publisherName: "문화출판",
-    publicationYear: "2024",
-    copyrightCategory: "간행물",
+    bookTitle: "문화 소식",
+    articleTitle: "문화 동향",
+    author: "한문화",
+    publisher: "문화출판",
+    publishYear: "2024",
+    imageInfo: "",
   },
 ];
 
@@ -139,9 +141,10 @@ export default function Home() {
       setData((prev) =>
         prev.map((item) => ({
           ...item,
+          authorType: "연속간행물",
           birthYear: "1970",
           deathYear: "2030",
-          kac: `KAC${Math.floor(Math.random() * 1000)
+          controlNumber: `KAC${Math.floor(Math.random() * 1000)
             .toString()
             .padStart(3, "0")}`,
           isni: `${Math.floor(Math.random() * 10000)
@@ -153,11 +156,8 @@ export default function Home() {
             .padStart(4, "0")}-${Math.floor(Math.random() * 10000)
             .toString()
             .padStart(4, "0")}`,
-          nationality: "한국",
-          roleDescription: "저작자",
-          residenceInfo: "서울특별시",
-          rightsHolderUnknown: "아니오",
-          copyrightStatus: "예",
+          lastAffiliation: "서울특별시",
+          remark: "저작권 확인됨",
         })),
       );
       setIsSearching(false);
@@ -169,12 +169,19 @@ export default function Home() {
   const handleSingleAdd = (formData: FormData) => {
     const newItem: PeriodicalPublication = {
       id: Date.now().toString(),
-      signature: formData.get("signature") as string,
-      workTitle: formData.get("workTitle") as string,
-      authorName: formData.get("authorName") as string,
-      publisherName: formData.get("publisherName") as string,
-      publicationYear: formData.get("publicationYear") as string,
-      copyrightCategory: formData.get("copyrightCategory") as string,
+      author: formData.get("author") as string,
+      bookTitle: formData.get("bookTitle") as string,
+      publisher: formData.get("publisher") as string,
+      publishYear: formData.get("publishYear") as string,
+      imageInfo: (formData.get("imageInfo") as string) || null,
+      articleTitle: formData.get("articleTitle") as string,
+      authorType: null,
+      birthYear: null,
+      deathYear: null,
+      controlNumber: null,
+      isni: null,
+      lastAffiliation: null,
+      remark: null,
     };
 
     setData((prev) => [...prev, newItem]);
