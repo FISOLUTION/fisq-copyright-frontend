@@ -7,7 +7,7 @@ export async function searchPeriodicalApi(
 ): Promise<BookSearchResponse> {
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
   console.log("Base URL:", baseUrl);
-  
+
   if (!baseUrl) {
     throw new Error("NEXT_PUBLIC_API_BASE_URL is not defined");
   }
@@ -19,7 +19,7 @@ export async function searchPeriodicalApi(
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "X-API-KEY": process.env.NEXT_PUBLIC_API_KEY || "",
+      "X-Api-Key": process.env.NEXT_PUBLIC_API_KEY || "",
     },
     body: JSON.stringify(arg),
   });
