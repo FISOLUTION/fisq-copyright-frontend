@@ -52,7 +52,7 @@ export default function BookSearchTable<T extends BookSearchData>({
           <TableRow className="hover:bg-transparent">
             <TableHead
               rowSpan={2}
-              className="hover:bg-muted/50 relative cursor-pointer p-0 text-center transition-colors"
+              className="hover:bg-muted/50 relative cursor-pointer transition-colors"
             >
               <div className="flex h-full w-full items-center justify-center px-2">
                 <Checkbox checked={allSelected} onCheckedChange={onSelectAll} />
@@ -60,13 +60,13 @@ export default function BookSearchTable<T extends BookSearchData>({
             </TableHead>
             <TableHead
               colSpan={basicColumns.length}
-              className="hover:bg-muted/50 cursor-default border-b-0 text-left font-semibold transition-colors"
+              className="hover:bg-muted/50 cursor-default border-b-0 transition-colors"
             >
               기본정보
             </TableHead>
             <TableHead
               colSpan={metaColumns.length}
-              className="hover:bg-muted/50 cursor-default border-b-0 text-left font-semibold transition-colors"
+              className="hover:bg-muted/50 cursor-default border-b-0 transition-colors"
             >
               메타정보
             </TableHead>
@@ -93,8 +93,8 @@ export default function BookSearchTable<T extends BookSearchData>({
         <TableBody>
           {data.map((item) => (
             <TableRow key={item.id}>
-              <TableCell className="p-0 text-center">
-                <div className="flex h-full w-full items-center justify-center px-2">
+              <TableCell className="text-center">
+                <div className="flex items-center justify-center">
                   <Checkbox
                     checked={selectedItems.includes(item.id)}
                     onCheckedChange={() => onSelectItem(item.id)}
