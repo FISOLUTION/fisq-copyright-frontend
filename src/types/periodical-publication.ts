@@ -1,7 +1,12 @@
-export interface PeriodicalPublication {
+// 기본 도서 데이터 인터페이스 (연속간행물과 단행본 공통)
+export interface BaseBookData {
   id: string;
   selected?: boolean;
+  [key: string]: string | boolean | undefined;
+}
 
+// 연속간행물 전용 인터페이스
+export interface PeriodicalPublication extends BaseBookData {
   // 기본정보
   signature: string;
   workTitle: string;
