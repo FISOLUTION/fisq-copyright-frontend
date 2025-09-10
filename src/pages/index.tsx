@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -7,43 +6,17 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
-import {
-  Download,
-  Loader2,
-  Plus,
-  RotateCcw,
-  Search,
-  Upload,
-  X,
-} from "lucide-react";
 import { PeriodicalPublication } from "@/types/periodical-publication";
 import Header from "@/components/Header";
+import LoadingOverlay from "@/components/search/LoadingOverlay";
+import ActionToolbar from "@/components/search/ActionToolbar";
+import BookSearchTable, {
+  BasicColumn,
+  MetaColumn,
+} from "@/components/search/BookSearchTable";
+import { FormField } from "@/components/search/SingleAddDialog";
+import { PreviewData } from "@/components/search/ExcelUploadDialog";
 
 const initialData: PeriodicalPublication[] = [
   {
@@ -66,12 +39,77 @@ const initialData: PeriodicalPublication[] = [
   },
 ];
 
+const basicColumns: BasicColumn[] = [
+  { key: "signature", label: "서명", width: "w-24" },
+  { key: "workTitle", label: "저작물명", width: "w-32" },
+  { key: "authorName", label: "저작자명", width: "w-24" },
+  { key: "publisherName", label: "출판사명", width: "w-28" },
+  { key: "publicationYear", label: "발행년도", width: "w-20" },
+  { key: "copyrightCategory", label: "저작권 구분", width: "w-24" },
+];
+
+const metaColumns: MetaColumn[] = [
+  { key: "birthYear", label: "생년", width: "w-16" },
+  { key: "deathYear", label: "몰년", width: "w-16" },
+  { key: "kac", label: "KAC", width: "w-20" },
+  { key: "isni", label: "ISNI", width: "w-40" },
+  { key: "nationality", label: "국적", width: "w-16" },
+  { key: "roleDescription", label: "역할어", width: "w-20" },
+  { key: "residenceInfo", label: "거소 및 단체정보", width: "w-32" },
+  { key: "rightsHolderUnknown", label: "권리자 불명여부", width: "w-28" },
+  { key: "copyrightStatus", label: "저작권 여부", width: "w-20" },
+];
+
+const formFields: FormField[] = [
+  { key: "signature", label: "서명", type: "text", required: true },
+  { key: "workTitle", label: "저작물명", type: "text", required: true },
+  { key: "authorName", label: "저작자명", type: "text", required: true },
+  { key: "publisherName", label: "출판사명", type: "text", required: true },
+  { key: "publicationYear", label: "발행년도", type: "text", required: true },
+  {
+    key: "copyrightCategory",
+    label: "저작권 구분",
+    type: "select",
+    required: true,
+    options: [
+      { value: "간행물", label: "간행물" },
+      { value: "학술지", label: "학술지" },
+      { value: "잡지", label: "잡지" },
+    ],
+  },
+];
+
+const previewData: PreviewData[] = [
+  {
+    signature: "간행-003",
+    workTitle: "디자인 매거진",
+    authorName: "박디자인",
+    publisherName: "디자인출판",
+    publicationYear: "2022",
+    copyrightCategory: "잡지",
+  },
+  {
+    signature: "간행-004",
+    workTitle: "건축 리뷰",
+    authorName: "최건축",
+    publisherName: "건축사",
+    publicationYear: "2023",
+    copyrightCategory: "학술지",
+  },
+  {
+    signature: "간행-005",
+    workTitle: "문화 소식",
+    authorName: "한문화",
+    publisherName: "문화출판",
+    publicationYear: "2024",
+    copyrightCategory: "간행물",
+  },
+];
+
 export default function Home() {
   const [data, setData] = useState<PeriodicalPublication[]>(initialData);
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [isSearching, setIsSearching] = useState(false);
-  const [singleAddOpen, setSingleAddOpen] = useState(false);
-  const [excelUploadOpen, setExcelUploadOpen] = useState(false);
 
   // 체크박스 관련 상태 계산
   const allSelected = data.length > 0 && selectedItems.length === data.length;
@@ -140,7 +178,6 @@ export default function Home() {
     };
 
     setData((prev) => [...prev, newItem]);
-    setSingleAddOpen(false);
     toast.success(
       "새 항목이 추가되었습니다. '검색하기'를 눌러 메타정보를 채우세요.",
     );
@@ -148,7 +185,6 @@ export default function Home() {
 
   // 엑셀 업로드
   const handleExcelUpload = () => {
-    setExcelUploadOpen(false);
     toast.success(
       "엑셀 파일이 업로드되었습니다. '검색하기'를 눌러 메타정보를 채우세요.",
     );
@@ -173,18 +209,12 @@ export default function Home() {
     toast.success(`${selectedItems.length}개 항목이 삭제되었습니다.`);
   };
 
-
   return (
     <div className="bg-background relative min-h-screen">
-      {/* 로딩 오버레이 */}
-      {isSearching && (
-        <div className="bg-background/80 fixed inset-0 z-50 flex items-center justify-center backdrop-blur-[2px]">
-          <div className="flex flex-col items-center gap-4">
-            <Loader2 className="text-primary h-12 w-12 animate-spin" />
-            <p className="text-lg font-medium">메타정보를 검색하는 중...</p>
-          </div>
-        </div>
-      )}
+      <LoadingOverlay
+        isLoading={isSearching}
+        message="메타정보를 검색하는 중..."
+      />
 
       <Header />
 
@@ -200,284 +230,32 @@ export default function Home() {
                 </CardDescription>
               </div>
 
-              {/* 툴바 버튼들 */}
-              <div className="flex flex-wrap gap-2">
-                {/* 단건 추가하기 */}
-                <Dialog open={singleAddOpen} onOpenChange={setSingleAddOpen}>
-                  <DialogTrigger asChild>
-                    <Button size="sm">
-                      <Plus className="mr-2 h-4 w-4" />
-                      단건 추가하기
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="max-w-2xl">
-                    <DialogHeader className="mb-6">
-                      <DialogTitle>단건 추가하기</DialogTitle>
-                    </DialogHeader>
-                    <form
-                      onSubmit={(e) => {
-                        e.preventDefault();
-                        const formData = new FormData(e.currentTarget);
-                        handleSingleAdd(formData);
-                      }}
-                      className="space-y-6"
-                    >
-                      <div className="grid grid-cols-2 gap-6">
-                        <div className="space-y-2">
-                          <Label htmlFor="signature">서명</Label>
-                          <Input id="signature" name="signature" required />
-                        </div>
-                        <div className="space-y-2">
-                          <Label htmlFor="workTitle">저작물명</Label>
-                          <Input id="workTitle" name="workTitle" required />
-                        </div>
-                        <div className="space-y-2">
-                          <Label htmlFor="authorName">저작자명</Label>
-                          <Input id="authorName" name="authorName" required />
-                        </div>
-                        <div className="space-y-2">
-                          <Label htmlFor="publisherName">출판사명</Label>
-                          <Input
-                            id="publisherName"
-                            name="publisherName"
-                            required
-                          />
-                        </div>
-                        <div className="space-y-2">
-                          <Label htmlFor="publicationYear">발행년도</Label>
-                          <Input
-                            id="publicationYear"
-                            name="publicationYear"
-                            required
-                          />
-                        </div>
-                        <div className="space-y-2">
-                          <Label htmlFor="copyrightCategory">저작권 구분</Label>
-                          <Select name="copyrightCategory" required>
-                            <SelectTrigger className="w-full">
-                              <SelectValue placeholder="구분 선택" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="간행물">간행물</SelectItem>
-                              <SelectItem value="학술지">학술지</SelectItem>
-                              <SelectItem value="잡지">잡지</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-                      </div>
-                      <div className="flex justify-end gap-2 pt-6">
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          onClick={() => setSingleAddOpen(false)}
-                        >
-                          취소
-                        </Button>
-                        <Button type="submit">추가하기</Button>
-                      </div>
-                    </form>
-                  </DialogContent>
-                </Dialog>
-
-                {/* 엑셀 업로드 */}
-                <Dialog
-                  open={excelUploadOpen}
-                  onOpenChange={setExcelUploadOpen}
-                >
-                  <DialogTrigger asChild>
-                    <Button size="sm">
-                      <Upload className="mr-2 h-4 w-4" />
-                      엑셀 업로드
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="max-w-3xl">
-                    <DialogHeader>
-                      <DialogTitle>엑셀 업로드</DialogTitle>
-                    </DialogHeader>
-                    <div className="space-y-4">
-                      {/* 드롭존 */}
-                      <div className="border-border rounded-lg border-2 border-dashed p-8 text-center">
-                        <Upload className="text-muted-foreground mx-auto mb-4 h-12 w-12" />
-                        <p className="text-foreground mb-2">
-                          엑셀 파일을 드래그하거나 클릭하여 업로드
-                        </p>
-                        <p className="text-muted-foreground text-sm">
-                          *.xlsx, *.xls 파일만 지원
-                        </p>
-                        <input
-                          type="file"
-                          className="hidden"
-                          accept=".xlsx,.xls"
-                        />
-                        <p className="mt-2 text-sm text-blue-600">
-                          sample-data.xlsx
-                        </p>
-                      </div>
-
-                      {/* 미리보기 테이블 */}
-                      <div>
-                        <h4 className="mb-2 font-medium">미리보기 (3행)</h4>
-                        <Table>
-                          <TableHeader>
-                            <TableRow>
-                              <TableHead>서명</TableHead>
-                              <TableHead>저작물명</TableHead>
-                              <TableHead>저작자명</TableHead>
-                              <TableHead>출판사명</TableHead>
-                              <TableHead>발행년도</TableHead>
-                              <TableHead>저작권 구분</TableHead>
-                            </TableRow>
-                          </TableHeader>
-                          <TableBody>
-                            <TableRow>
-                              <TableCell>간행-003</TableCell>
-                              <TableCell>디자인 매거진</TableCell>
-                              <TableCell>박디자인</TableCell>
-                              <TableCell>디자인출판</TableCell>
-                              <TableCell>2022</TableCell>
-                              <TableCell>잡지</TableCell>
-                            </TableRow>
-                            <TableRow>
-                              <TableCell>간행-004</TableCell>
-                              <TableCell>건축 리뷰</TableCell>
-                              <TableCell>최건축</TableCell>
-                              <TableCell>건축사</TableCell>
-                              <TableCell>2023</TableCell>
-                              <TableCell>학술지</TableCell>
-                            </TableRow>
-                            <TableRow>
-                              <TableCell>간행-005</TableCell>
-                              <TableCell>문화 소식</TableCell>
-                              <TableCell>한문화</TableCell>
-                              <TableCell>문화출판</TableCell>
-                              <TableCell>2024</TableCell>
-                              <TableCell>간행물</TableCell>
-                            </TableRow>
-                          </TableBody>
-                        </Table>
-                      </div>
-                    </div>
-                    <div className="flex justify-end gap-2 pt-4">
-                      <Button
-                        variant="ghost"
-                        onClick={() => setExcelUploadOpen(false)}
-                      >
-                        취소
-                      </Button>
-                      <Button onClick={handleExcelUpload}>가져오기</Button>
-                    </div>
-                  </DialogContent>
-                </Dialog>
-
-                {/* 검색하기 */}
-                <Button size="sm" onClick={handleSearch} disabled={isSearching}>
-                  <Search className="mr-2 h-4 w-4" />
-                  검색하기
-                </Button>
-
-                {/* 엑셀 다운로드 */}
-                <Button size="sm" onClick={handleExcelDownload}>
-                  <Download className="mr-2 h-4 w-4" />
-                  엑셀 다운로드
-                </Button>
-
-                {/* 초기화 */}
-                <Button size="sm" onClick={handleReset}>
-                  <RotateCcw className="mr-2 h-4 w-4" />
-                  초기화
-                </Button>
-
-                {/* 선택 제거 */}
-                <Button
-                  size="sm"
-                  onClick={handleRemoveSelected}
-                  disabled={selectedItems.length === 0}
-                >
-                  <X className="mr-2 h-4 w-4" />
-                  선택 제거
-                </Button>
-              </div>
+              <ActionToolbar
+                onSingleAdd={handleSingleAdd}
+                onExcelUpload={handleExcelUpload}
+                onSearch={handleSearch}
+                onExcelDownload={handleExcelDownload}
+                onReset={handleReset}
+                onRemoveSelected={handleRemoveSelected}
+                isSearching={isSearching}
+                selectedItemsCount={selectedItems.length}
+                formFields={formFields}
+                previewData={previewData}
+                basicColumns={basicColumns}
+              />
             </div>
           </CardHeader>
 
           <CardContent>
-            {/* 테이블 */}
-            <div className="overflow-x-auto">
-              <Table style={{ minWidth: "1400px" }}>
-                <TableHeader className="bg-background sticky top-0 z-10">
-                  <TableRow className="hover:bg-transparent">
-                    <TableHead rowSpan={2} className="hover:bg-muted/50 transition-colors cursor-pointer relative text-center p-0">
-                      <div className="flex items-center justify-center h-full w-full px-2">
-                        <Checkbox
-                          checked={allSelected}
-                          onCheckedChange={handleSelectAll}
-                        />
-                      </div>
-                    </TableHead>
-                    <TableHead
-                      colSpan={6}
-                      className="border-b-0 text-left font-semibold hover:bg-muted/50 transition-colors cursor-default"
-                    >
-                      기본정보
-                    </TableHead>
-                    <TableHead
-                      colSpan={9}
-                      className="border-b-0 text-left font-semibold hover:bg-muted/50 transition-colors cursor-default"
-                    >
-                      메타정보
-                    </TableHead>
-                  </TableRow>
-                  <TableRow className="hover:bg-transparent">
-                    <TableHead className="w-24 hover:bg-muted/50 transition-colors cursor-default">서명</TableHead>
-                    <TableHead className="w-32 hover:bg-muted/50 transition-colors cursor-default">저작물명</TableHead>
-                    <TableHead className="w-24 hover:bg-muted/50 transition-colors cursor-default">저작자명</TableHead>
-                    <TableHead className="w-28 hover:bg-muted/50 transition-colors cursor-default">출판사명</TableHead>
-                    <TableHead className="w-20 hover:bg-muted/50 transition-colors cursor-default">발행년도</TableHead>
-                    <TableHead className="w-24 hover:bg-muted/50 transition-colors cursor-default">저작권 구분</TableHead>
-                    <TableHead className="w-16 hover:bg-muted/50 transition-colors cursor-default">생년</TableHead>
-                    <TableHead className="w-16 hover:bg-muted/50 transition-colors cursor-default">몰년</TableHead>
-                    <TableHead className="w-20 hover:bg-muted/50 transition-colors cursor-default">KAC</TableHead>
-                    <TableHead className="w-40 hover:bg-muted/50 transition-colors cursor-default">ISNI</TableHead>
-                    <TableHead className="w-16 hover:bg-muted/50 transition-colors cursor-default">국적</TableHead>
-                    <TableHead className="w-20 hover:bg-muted/50 transition-colors cursor-default">역할어</TableHead>
-                    <TableHead className="w-32 hover:bg-muted/50 transition-colors cursor-default">거소 및 단체정보</TableHead>
-                    <TableHead className="w-28 hover:bg-muted/50 transition-colors cursor-default">권리자 불명여부</TableHead>
-                    <TableHead className="w-20 hover:bg-muted/50 transition-colors cursor-default">저작권 여부</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {data.map((item) => (
-                    <TableRow key={item.id}>
-                      <TableCell className="text-center p-0">
-                        <div className="flex items-center justify-center h-full w-full px-2">
-                          <Checkbox
-                            checked={selectedItems.includes(item.id)}
-                            onCheckedChange={() => handleSelectItem(item.id)}
-                          />
-                        </div>
-                      </TableCell>
-                      <TableCell>{item.signature}</TableCell>
-                      <TableCell>{item.workTitle}</TableCell>
-                      <TableCell>{item.authorName}</TableCell>
-                      <TableCell>{item.publisherName}</TableCell>
-                      <TableCell>{item.publicationYear}</TableCell>
-                      <TableCell>{item.copyrightCategory}</TableCell>
-
-                      {/* 메타정보 컬럼들 */}
-                      <TableCell>{item.birthYear || ""}</TableCell>
-                      <TableCell>{item.deathYear || ""}</TableCell>
-                      <TableCell>{item.kac || ""}</TableCell>
-                      <TableCell>{item.isni || ""}</TableCell>
-                      <TableCell>{item.nationality || ""}</TableCell>
-                      <TableCell>{item.roleDescription || ""}</TableCell>
-                      <TableCell>{item.residenceInfo || ""}</TableCell>
-                      <TableCell>{item.rightsHolderUnknown || ""}</TableCell>
-                      <TableCell>{item.copyrightStatus || ""}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
+            <BookSearchTable
+              data={data}
+              selectedItems={selectedItems}
+              onSelectAll={handleSelectAll}
+              onSelectItem={handleSelectItem}
+              basicColumns={basicColumns}
+              metaColumns={metaColumns}
+              allSelected={allSelected}
+            />
           </CardContent>
         </Card>
       </main>
