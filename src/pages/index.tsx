@@ -141,7 +141,7 @@ export default function Home() {
       setData((prev) =>
         prev.map((item) => ({
           ...item,
-          authorType: "연속간행물",
+          authorType: Math.random() > 0.5 ? "개인" : "단체",
           birthYear: "1970",
           deathYear: "2030",
           controlNumber: `KAC${Math.floor(Math.random() * 1000)
