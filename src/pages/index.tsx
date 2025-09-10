@@ -146,7 +146,7 @@ export default function Home() {
           deathYear: "2030",
           controlNumber: `KAC${Math.floor(Math.random() * 1000)
             .toString()
-            .padStart(3, "0")}`,
+            .padStart(8, "0")}`,
           isni: `${Math.floor(Math.random() * 10000)
             .toString()
             .padStart(4, "0")}-${Math.floor(Math.random() * 10000)
