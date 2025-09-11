@@ -20,6 +20,7 @@ import { FormField } from "@/components/search/SingleAddDialog";
 import { PreviewData } from "@/components/search/ExcelUploadDialog";
 import { searchPeriodicalApi } from "@/lib/api";
 import { PeriodicalSearchRequest } from "@/types/dtos/bookSearch";
+import { exportTableToExcel } from "@/lib/utils";
 
 const initialData: PeriodicalPublication[] = [
   {
@@ -214,7 +215,19 @@ export default function Home() {
 
   // 엑셀 다운로드
   const handleExcelDownload = () => {
-    toast.success("엑셀 파일 다운로드가 시작되었습니다.");
+    if (data.length === 0) {
+      toast.error("다운로드할 데이터가 없습니다.");
+      return;
+    }
+
+    try {
+      const filename = `연속간행물_검색결과_${new Date().toISOString().split('T')[0]}`;
+      exportTableToExcel(data, basicColumns, metaColumns, filename);
+      toast.success("엑셀 파일 다운로드가 시작되었습니다.");
+    } catch (error) {
+      console.error("Excel download error:", error);
+      toast.error("엑셀 파일 다운로드 중 오류가 발생했습니다.");
+    }
   };
 
   // 초기화
