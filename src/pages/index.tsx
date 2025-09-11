@@ -17,7 +17,6 @@ import BookSearchTable, {
   MetaColumn,
 } from "@/components/search/BookSearchTable";
 import { FormField } from "@/components/search/SingleAddDialog";
-import { PreviewData } from "@/components/search/ExcelUploadDialog";
 import { searchPeriodicalApi } from "@/lib/api";
 import { PeriodicalSearchRequest } from "@/types/dtos/bookSearch";
 import { exportTableToExcel } from "@/lib/utils";
@@ -69,32 +68,6 @@ const formFields: FormField[] = [
   { key: "imageInfo", label: "이미지 정보", type: "text", required: false },
 ];
 
-const previewData: PreviewData[] = [
-  {
-    bookTitle: "디자인 매거진",
-    articleTitle: "디자인 트렌드",
-    author: "박디자인",
-    publisher: "디자인출판",
-    publishYear: "2022",
-    imageInfo: "",
-  },
-  {
-    bookTitle: "건축 리뷰",
-    articleTitle: "현대 건축론",
-    author: "최건축",
-    publisher: "건축사",
-    publishYear: "2023",
-    imageInfo: "",
-  },
-  {
-    bookTitle: "문화 소식",
-    articleTitle: "문화 동향",
-    author: "한문화",
-    publisher: "문화출판",
-    publishYear: "2024",
-    imageInfo: "",
-  },
-];
 
 export default function Home() {
   const [data, setData] = useState<PeriodicalPublication[]>(initialData);
@@ -207,9 +180,30 @@ export default function Home() {
   };
 
   // 엑셀 업로드
-  const handleExcelUpload = () => {
+  const handleExcelUpload = (uploadedData: { [key: string]: string }[]) => {
+    // PreviewData를 PeriodicalPublication 형태로 변환
+    const newItems: PeriodicalPublication[] = uploadedData.map((item, index) => ({
+      id: (Date.now() + index).toString(),
+      author: item.author || "",
+      bookTitle: item.bookTitle || "",
+      publisher: item.publisher || "",
+      publishYear: item.publishYear || "",
+      imageInfo: item.imageInfo || null,
+      articleTitle: item.articleTitle || "",
+      // 메타정보는 빈 상태로 초기화 (검색을 통해 채울 예정)
+      authorType: null,
+      birthYear: null,
+      deathYear: null,
+      controlNumber: null,
+      isni: null,
+      lastAffiliation: null,
+      remark: null,
+    }));
+
+    // 기존 데이터에 새 항목들 추가
+    setData((prev) => [...prev, ...newItems]);
     toast.success(
-      "엑셀 파일이 업로드되었습니다. '검색하기'를 눌러 메타정보를 채우세요.",
+      `${newItems.length}개 항목이 추가되었습니다. '검색하기'를 눌러 메타정보를 채우세요.`,
     );
   };
 
@@ -275,7 +269,6 @@ export default function Home() {
                 isSearching={isSearching}
                 selectedItemsCount={selectedItems.length}
                 formFields={formFields}
-                previewData={previewData}
                 basicColumns={basicColumns}
               />
             </div>

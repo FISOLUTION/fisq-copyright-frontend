@@ -2,12 +2,12 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Download, Plus, RotateCcw, Search, Upload, X } from "lucide-react";
 import SingleAddDialog, { FormField } from "./SingleAddDialog";
-import ExcelUploadDialog, { PreviewData } from "./ExcelUploadDialog";
+import ExcelUploadDialog from "./ExcelUploadDialog";
 import { BasicColumn } from "./BookSearchTable";
 
 interface ActionToolbarProps {
   onSingleAdd: (formData: FormData) => void;
-  onExcelUpload: () => void;
+  onExcelUpload: (data: { [key: string]: string }[]) => void;
   onSearch: () => void;
   onExcelDownload: () => void;
   onReset: () => void;
@@ -15,7 +15,6 @@ interface ActionToolbarProps {
   isSearching: boolean;
   selectedItemsCount: number;
   formFields: FormField[];
-  previewData: PreviewData[];
   basicColumns: BasicColumn[];
 }
 
@@ -29,7 +28,6 @@ export default function ActionToolbar({
   isSearching,
   selectedItemsCount,
   formFields,
-  previewData,
   basicColumns,
 }: ActionToolbarProps) {
   const [singleAddOpen, setSingleAddOpen] = useState(false);
@@ -40,8 +38,8 @@ export default function ActionToolbar({
     setSingleAddOpen(false);
   };
 
-  const handleExcelUpload = () => {
-    onExcelUpload();
+  const handleExcelUpload = (data: { [key: string]: string }[]) => {
+    onExcelUpload(data);
     setExcelUploadOpen(false);
   };
 
@@ -94,7 +92,6 @@ export default function ActionToolbar({
         open={excelUploadOpen}
         onOpenChange={setExcelUploadOpen}
         onUpload={handleExcelUpload}
-        previewData={previewData}
         columns={basicColumns}
       />
     </>
