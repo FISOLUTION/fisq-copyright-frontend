@@ -1,7 +1,7 @@
 import { PeriodicalSearchRequest } from "@/types/dtos/bookSearch";
 import { BookSearchResponse } from "@/types/dtos/bookSearch";
 import { apiKeyUtils } from "@/utils/api-key";
-import { toast } from "sonner";
+import { ApiKeyNotConfiguredError } from "./errors";
 
 export async function searchPeriodicalApi(
   url: string,
@@ -13,17 +13,7 @@ export async function searchPeriodicalApi(
   const apiKey = apiKeyUtils.get();
 
   if (!apiKey) {
-    toast.error("API 키가 설정되지 않았습니다", {
-      description: "우측 상단의 설정 버튼을 클릭하여 API 키를 설정해주세요.",
-      action: {
-        label: "설정",
-        onClick: () => {
-          const event = new CustomEvent('openSettings');
-          window.dispatchEvent(event);
-        },
-      },
-    });
-    return Promise.reject({ message: "API key is not configured", silent: true });
+    throw new ApiKeyNotConfiguredError();
   }
 
   const res = await fetch(fullUrl, {

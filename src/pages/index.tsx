@@ -20,6 +20,7 @@ import { FormField } from "@/components/search/SingleAddDialog";
 import { searchPeriodicalApi } from "@/lib/api";
 import { PeriodicalSearchRequest } from "@/types/dtos/bookSearch";
 import { exportTableToExcel } from "@/lib/utils";
+import { ApiKeyNotConfiguredError } from "@/lib/errors";
 
 const initialData: PeriodicalPublication[] = [
   {
@@ -67,7 +68,6 @@ const formFields: FormField[] = [
   { key: "publishYear", label: "발행년도", type: "text", required: true },
   { key: "imageInfo", label: "이미지 정보", type: "text", required: false },
 ];
-
 
 export default function Home() {
   const [data, setData] = useState<PeriodicalPublication[]>(initialData);
@@ -150,10 +150,25 @@ export default function Home() {
       toast.success(`${successCount}개 항목의 메타정보 검색이 완료되었습니다.`);
     } catch (error) {
       console.error("Search error:", error);
-      // silent 플래그가 있는 에러는 이미 처리된 것이므로 추가 토스트 표시하지 않음
-      if (!(error && typeof error === 'object' && 'silent' in error)) {
-        toast.error("메타정보 검색 중 오류가 발생했습니다.");
+
+      // API 키가 설정되지 않은 경우
+      if (error instanceof ApiKeyNotConfiguredError) {
+        toast.error("API 키가 설정되지 않았습니다", {
+          description:
+            "우측 상단의 설정 버튼을 클릭하여 API 키를 설정해주세요.",
+          action: {
+            label: "설정",
+            onClick: () => {
+              const event = new CustomEvent("openSettings");
+              window.dispatchEvent(event);
+            },
+          },
+        });
+        return;
       }
+
+      // 기타 오류
+      toast.error("메타정보 검색 중 오류가 발생했습니다.");
     }
   };
 
@@ -185,23 +200,25 @@ export default function Home() {
   // 엑셀 업로드
   const handleExcelUpload = (uploadedData: { [key: string]: string }[]) => {
     // PreviewData를 PeriodicalPublication 형태로 변환
-    const newItems: PeriodicalPublication[] = uploadedData.map((item, index) => ({
-      id: (Date.now() + index).toString(),
-      author: item.author || "",
-      bookTitle: item.bookTitle || "",
-      publisher: item.publisher || "",
-      publishYear: item.publishYear || "",
-      imageInfo: item.imageInfo || null,
-      articleTitle: item.articleTitle || "",
-      // 메타정보는 빈 상태로 초기화 (검색을 통해 채울 예정)
-      authorType: null,
-      birthYear: null,
-      deathYear: null,
-      controlNumber: null,
-      isni: null,
-      lastAffiliation: null,
-      remark: null,
-    }));
+    const newItems: PeriodicalPublication[] = uploadedData.map(
+      (item, index) => ({
+        id: (Date.now() + index).toString(),
+        author: item.author || "",
+        bookTitle: item.bookTitle || "",
+        publisher: item.publisher || "",
+        publishYear: item.publishYear || "",
+        imageInfo: item.imageInfo || null,
+        articleTitle: item.articleTitle || "",
+        // 메타정보는 빈 상태로 초기화 (검색을 통해 채울 예정)
+        authorType: null,
+        birthYear: null,
+        deathYear: null,
+        controlNumber: null,
+        isni: null,
+        lastAffiliation: null,
+        remark: null,
+      }),
+    );
 
     // 기존 데이터에 새 항목들 추가
     setData((prev) => [...prev, ...newItems]);
@@ -218,7 +235,7 @@ export default function Home() {
     }
 
     try {
-      const filename = `연속간행물_검색결과_${new Date().toISOString().split('T')[0]}`;
+      const filename = `연속간행물_검색결과_${new Date().toISOString().split("T")[0]}`;
       exportTableToExcel(data, basicColumns, metaColumns, filename);
       toast.success("엑셀 파일 다운로드가 시작되었습니다.");
     } catch (error) {
