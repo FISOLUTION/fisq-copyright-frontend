@@ -19,8 +19,8 @@ import BookSearchTable, {
 import { FormField } from "@/components/search/SingleAddDialog";
 import { searchPeriodicalApi } from "@/lib/api";
 import { PeriodicalSearchRequest } from "@/types/dtos/bookSearch";
-import { exportTableToExcel } from "@/lib/utils";
 import { ApiKeyNotConfiguredError } from "@/lib/errors";
+import { excel } from "@/lib/excel";
 
 const initialData: PeriodicalPublication[] = [
   {
@@ -236,7 +236,7 @@ export default function Home() {
 
     try {
       const filename = `연속간행물_검색결과_${new Date().toISOString().split("T")[0]}`;
-      exportTableToExcel(data, basicColumns, metaColumns, filename);
+      excel(data, basicColumns, metaColumns, filename);
       toast.success("엑셀 파일 다운로드가 시작되었습니다.");
     } catch (error) {
       console.error("Excel download error:", error);
