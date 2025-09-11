@@ -1,8 +1,10 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useCallback, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -14,6 +16,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Upload } from "lucide-react";
 import * as XLSX from "xlsx";
 import { BasicColumn } from "./BookSearchTable";
@@ -42,53 +45,64 @@ export default function ExcelUploadDialog({
   const currentData = uploadedData;
   const rowCount = currentData.length;
 
-  const processExcelFile = (file: File) => {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      try {
-        const data = e.target?.result;
-        const workbook = XLSX.read(data, { type: "array" });
-        const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-        const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+  const processExcelFile = useCallback(
+    (file: File) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const data = e.target?.result;
+          const workbook = XLSX.read(data, { type: "array" });
+          const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+          const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
 
-        // 첫 번째 행을 헤더로 사용하고, 나머지를 데이터로 처리
-        const rows = jsonData.slice(1) as string[][];
+          // 첫 번째 행을 헤더로 사용하고, 나머지를 데이터로 처리
+          const rows = (jsonData.slice(1) as string[][]) || [];
 
-        // 기본정보 컬럼들에 맞춰서 데이터 변환
-        const processedData: PreviewData[] = rows.map((row) => {
-          const item: PreviewData = {};
-          columns.forEach((col, index) => {
-            item[col.key] = row[index] || "";
+          // 기본정보 컬럼들에 맞춰서 데이터 변환
+          const processedData: PreviewData[] = rows.map((row) => {
+            const item: PreviewData = {};
+            columns.forEach((col, index) => {
+              item[col.key] = (row[index] as string) || "";
+            });
+            return item;
           });
-          return item;
-        });
 
-        setUploadedData(processedData);
-        setFileName(file.name);
-      } catch (error) {
-        console.error("Error processing Excel file:", error);
-        alert("엑셀 파일 처리 중 오류가 발생했습니다.");
+          setUploadedData(processedData);
+          setFileName(file.name);
+        } catch (error) {
+          console.error("Error processing Excel file:", error);
+          alert("엑셀 파일 처리 중 오류가 발생했습니다.");
+        }
+      };
+      reader.readAsArrayBuffer(file);
+    },
+    [columns],
+  );
+
+  const openFilePicker = useCallback(() => fileInputRef.current?.click(), []);
+
+  const handleFileUpload = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (file) {
+        processExcelFile(file);
       }
-    };
-    reader.readAsArrayBuffer(file);
-  };
+    },
+    [processExcelFile],
+  );
 
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      processExcelFile(file);
-    }
-  };
-
-  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    const file = e.dataTransfer.files[0];
-    if (file && (file.name.endsWith(".xlsx") || file.name.endsWith(".xls"))) {
-      processExcelFile(file);
-    } else {
-      alert("xlsx 또는 xls 파일만 업로드 가능합니다.");
-    }
-  };
+  const handleDrop = useCallback(
+    (e: React.DragEvent<HTMLDivElement>) => {
+      e.preventDefault();
+      const file = e.dataTransfer.files[0];
+      if (file && (file.name.endsWith(".xlsx") || file.name.endsWith(".xls"))) {
+        processExcelFile(file);
+      } else {
+        alert("xlsx 또는 xls 파일만 업로드 가능합니다.");
+      }
+    },
+    [processExcelFile],
+  );
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -99,105 +113,128 @@ export default function ExcelUploadDialog({
   };
 
   // 다이얼로그가 열릴 때 상태 초기화
-  React.useEffect(() => {
+  useEffect(() => {
     if (open) {
       setUploadedData([]);
       setFileName("");
+      if (fileInputRef.current) fileInputRef.current.value = "";
     }
   }, [open]);
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-h-[80vh] w-full max-w-[90vw] overflow-hidden">
+      {/* 기본 max-w는 shadcn(DialogContent) 기본값(max-w-lg)을 유지하고,
+          작은 화면에서는 기본값을 쓰되 sm 이상에서만 넓혀줍니다. */}
+      <DialogContent className="sm:max-w-2xl">
         <DialogHeader>
           <DialogTitle>엑셀 업로드</DialogTitle>
+          <DialogDescription>
+            xlsx/xls 파일을 업로드하여 데이터를 미리 확인하고 가져올 수
+            있습니다.
+          </DialogDescription>
         </DialogHeader>
-        <div className="max-h-[60vh] space-y-4 overflow-auto">
-          {/* 드롭존 */}
-          <div
-            className="border-border hover:bg-muted/50 cursor-pointer rounded-lg border-2 border-dashed p-8 text-center transition-colors"
-            onDrop={handleDrop}
-            onDragOver={handleDragOver}
-            onDragEnter={handleDragEnter}
-            onClick={() => fileInputRef.current?.click()}
-          >
-            <Upload className="text-muted-foreground mx-auto mb-4 h-12 w-12" />
-            <p className="text-foreground mb-2">
-              엑셀 파일을 드래그하거나 클릭하여 업로드
-            </p>
-            <p className="text-muted-foreground text-sm">
-              *.xlsx, *.xls 파일만 지원
-            </p>
-            <input
-              ref={fileInputRef}
-              type="file"
-              className="hidden"
-              accept=".xlsx,.xls"
-              onChange={handleFileUpload}
-            />
-            <Button
-              variant="outline"
-              onClick={() => fileInputRef.current?.click()}
-              className="mt-4"
-            >
-              파일 선택
-            </Button>
-            {fileName && (
-              <p className="mt-2 text-sm text-blue-600">{fileName}</p>
-            )}
-          </div>
 
-          {/* 미리보기 테이블 */}
-          <div>
-            <h4 className="mb-2 font-medium">미리보기 ({rowCount}행)</h4>
-            {currentData.length > 0 ? (
-              <div className="overflow-x-auto rounded-lg border">
-                <Table className="min-w-full">
-                  <TableHeader>
-                    <TableRow>
-                      {columns.map((column) => (
-                        <TableHead
-                          key={column.key}
-                          className="whitespace-nowrap"
-                        >
-                          {column.label}
-                        </TableHead>
-                      ))}
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {currentData.map((row, index) => (
-                      <TableRow key={index}>
+        {/* ScrollArea를 사용해 shadcn 기본 스크롤 스타일을 존중 */}
+        <ScrollArea className="h-[60vh] pr-4">
+          <div className="space-y-4">
+            {/* 드롭존 */}
+            <div
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) =>
+                (e.key === "Enter" || e.key === " ") && openFilePicker()
+              }
+              className="hover:bg-muted/50 rounded-lg border border-dashed p-8 text-center transition-colors"
+              onDrop={handleDrop}
+              onDragOver={handleDragOver}
+              onDragEnter={handleDragEnter}
+              onClick={openFilePicker}
+              aria-label="엑셀 파일 업로드"
+            >
+              <Upload className="text-muted-foreground mx-auto mb-4 h-12 w-12" />
+              <p className="mb-2">엑셀 파일을 드래그하거나 클릭하여 업로드</p>
+              <p className="text-muted-foreground text-sm">
+                *.xlsx, *.xls 파일만 지원
+              </p>
+              <input
+                ref={fileInputRef}
+                type="file"
+                className="hidden"
+                accept=".xlsx,.xls"
+                onChange={handleFileUpload}
+              />
+              <Button
+                variant="outline"
+                className="mt-4"
+                type="button"
+                onClick={openFilePicker}
+              >
+                파일 선택
+              </Button>
+              {fileName && (
+                <p className="text-muted-foreground mt-2 text-sm">{fileName}</p>
+              )}
+            </div>
+
+            {/* 미리보기 테이블 */}
+            <div>
+              <h4 className="mb-2 font-medium">미리보기 ({rowCount}행)</h4>
+              {currentData.length > 0 ? (
+                <div className="overflow-x-auto rounded-md border">
+                  <Table className="min-w-full">
+                    <TableHeader>
+                      <TableRow>
                         {columns.map((column) => (
-                          <TableCell
+                          <TableHead
                             key={column.key}
                             className="whitespace-nowrap"
                           >
-                            {row[column.key] || ""}
-                          </TableCell>
+                            {column.label}
+                          </TableHead>
                         ))}
                       </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
-            ) : (
-              <div className="text-muted-foreground rounded-lg border py-8 text-center">
-                엑셀 파일을 업로드하면 여기에 미리보기가 표시됩니다.
-              </div>
-            )}
+                    </TableHeader>
+                    <TableBody>
+                      {currentData.map((row, index) => (
+                        <TableRow key={index}>
+                          {columns.map((column) => (
+                            <TableCell
+                              key={column.key}
+                              className="whitespace-nowrap"
+                            >
+                              {row[column.key] || ""}
+                            </TableCell>
+                          ))}
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              ) : (
+                <div className="text-muted-foreground rounded-md border p-8 text-center text-sm">
+                  엑셀 파일을 업로드하면 여기에 미리보기가 표시됩니다.
+                </div>
+              )}
+            </div>
           </div>
-        </div>
-        <div className="flex justify-end gap-2 pt-4">
-          <Button variant="ghost" onClick={() => onOpenChange(false)}>
+        </ScrollArea>
+
+        <DialogFooter>
+          <Button
+            variant="ghost"
+            type="button"
+            onClick={() => onOpenChange(false)}
+          >
             취소
           </Button>
           <Button
+            type="button"
             onClick={() => onUpload(currentData)}
             disabled={currentData.length === 0}
           >
             가져오기
           </Button>
-        </div>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );
