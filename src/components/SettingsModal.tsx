@@ -57,19 +57,11 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
             </div>
           </div>
           <div className="flex justify-between gap-2 pt-6">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={handleReset}
-            >
-              리셋
+            <Button type="button" variant="outline" onClick={handleReset}>
+              초기화
             </Button>
             <div className="flex gap-2">
-              <Button
-                type="button"
-                variant="ghost"
-                onClick={onClose}
-              >
+              <Button type="button" variant="ghost" onClick={onClose}>
                 취소
               </Button>
               <Button type="button" onClick={handleSave}>
