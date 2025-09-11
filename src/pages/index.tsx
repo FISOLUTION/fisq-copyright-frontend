@@ -150,7 +150,10 @@ export default function Home() {
       toast.success(`${successCount}개 항목의 메타정보 검색이 완료되었습니다.`);
     } catch (error) {
       console.error("Search error:", error);
-      toast.error("메타정보 검색 중 오류가 발생했습니다.");
+      // silent 플래그가 있는 에러는 이미 처리된 것이므로 추가 토스트 표시하지 않음
+      if (!(error && typeof error === 'object' && 'silent' in error)) {
+        toast.error("메타정보 검색 중 오류가 발생했습니다.");
+      }
     }
   };
 
