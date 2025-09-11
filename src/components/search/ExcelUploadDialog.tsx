@@ -167,7 +167,10 @@ export default function ExcelUploadDialog({
                 variant="outline"
                 className="mt-4"
                 type="button"
-                onClick={openFilePicker}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  openFilePicker();
+                }}
               >
                 파일 선택
               </Button>
