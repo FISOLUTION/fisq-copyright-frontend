@@ -2,7 +2,7 @@ import {
   BasicColumn,
   BookSearchData,
   MetaColumn,
-} from "@/components/search/BookSearchTable";
+} from "@/components/search/book-search-table";
 import * as XLSX from "xlsx";
 
 export function excel<T extends BookSearchData>(

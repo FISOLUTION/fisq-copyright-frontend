@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Settings } from "lucide-react";
-import { SettingsModal } from "@/components/SettingsModal";
+import { SettingsModal } from "@/components/settings-modal";
 
 export default function Header() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
@@ -12,9 +12,9 @@ export default function Header() {
       setIsSettingsOpen(true);
     };
 
-    window.addEventListener('openSettings', handleOpenSettings);
+    window.addEventListener("openSettings", handleOpenSettings);
     return () => {
-      window.removeEventListener('openSettings', handleOpenSettings);
+      window.removeEventListener("openSettings", handleOpenSettings);
     };
   }, []);
 

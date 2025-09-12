@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Download, Plus, RotateCcw, Search, Upload, X } from "lucide-react";
-import SingleAddDialog, { FormField } from "./SingleAddDialog";
-import ExcelUploadDialog from "./ExcelUploadDialog";
-import { BasicColumn } from "./BookSearchTable";
+import SingleAddDialog, { FormField } from "./single-add-dialog";
+import ExcelUploadDialog from "./excel-upload-dialog";
+import { BasicColumn } from "./book-search-table";
 
 interface ActionToolbarProps {
   onSingleAdd: (formData: FormData) => void;

@@ -9,16 +9,16 @@ import {
 } from "@/components/ui/card";
 import { toast } from "sonner";
 import { PeriodicalPublication } from "@/types/periodical-publication";
-import Header from "@/components/Header";
-import LoadingOverlay from "@/components/search/LoadingOverlay";
-import ActionToolbar from "@/components/search/ActionToolbar";
+import Header from "@/components/header";
+import LoadingOverlay from "@/components/search/loading-overlay";
+import ActionToolbar from "@/components/search/action-toolbar";
 import BookSearchTable, {
   BasicColumn,
   MetaColumn,
-} from "@/components/search/BookSearchTable";
-import { FormField } from "@/components/search/SingleAddDialog";
+} from "@/components/search/book-search-table";
+import { FormField } from "@/components/search/single-add-dialog";
 import { searchPeriodicalApi } from "@/lib/api";
-import { PeriodicalSearchRequest } from "@/types/dtos/bookSearch";
+import { PeriodicalSearchRequest } from "@/types/dtos/book-search";
 import { ApiKeyNotConfiguredError } from "@/lib/errors";
 import { excel } from "@/lib/excel";
 

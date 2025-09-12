@@ -1,5 +1,7 @@
-import { PeriodicalSearchRequest } from "@/types/dtos/bookSearch";
-import { BookSearchResponse } from "@/types/dtos/bookSearch";
+import {
+  BookSearchResponse,
+  PeriodicalSearchRequest,
+} from "@/types/dtos/book-search";
 import { apiKeyUtils } from "@/utils/api-key";
 import { ApiKeyNotConfiguredError } from "./errors";
 

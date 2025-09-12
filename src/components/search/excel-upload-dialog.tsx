@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -19,7 +19,7 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Upload } from "lucide-react";
 import * as XLSX from "xlsx";
-import { BasicColumn } from "./BookSearchTable";
+import { BasicColumn } from "./book-search-table";
 
 export interface PreviewData {
   [key: string]: string;
