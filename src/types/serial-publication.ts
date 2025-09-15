@@ -24,3 +24,22 @@ export interface SerialPublication extends BaseBookData {
   lastAffiliation: string | null;
   remark: string | null;
 }
+
+// 단행본 전용 인터페이스 (articleTitle 제외)
+export interface MonographPublication extends BaseBookData {
+  // 기본정보 (MonographRequestItem 기반)
+  author: string;
+  bookTitle: string | null;
+  publisher: string;
+  publishYear: string;
+  imageInfo: string | null;
+
+  // 메타정보 (BookSearchResponseItem 기반)
+  authorType: string | null;
+  birthYear: string | null;
+  deathYear: string | null;
+  controlNumber: string | null;
+  isni: string | null;
+  lastAffiliation: string | null;
+  remark: string | null;
+}

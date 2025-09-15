@@ -14,6 +14,12 @@ export interface SerialSearchRequest {
   items: SerialRequestItem[];
 }
 
+export type MonographRequestItem = BaseSearchRequestItem;
+
+export interface MonographSearchRequest {
+  items: MonographRequestItem[];
+}
+
 export interface BookSearchResponseItem {
   index: number;
   authorType: string | null;
