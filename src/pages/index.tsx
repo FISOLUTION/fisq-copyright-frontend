@@ -8,7 +8,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { toast } from "sonner";
-import { PeriodicalPublication } from "@/types/periodical-publication";
+import { SerialPublication } from "@/types/serial-publication";
 import Header from "@/components/header";
 import LoadingOverlay from "@/components/search/loading-overlay";
 import ActionToolbar from "@/components/search/action-toolbar";
@@ -17,12 +17,12 @@ import BookSearchTable, {
   MetaColumn,
 } from "@/components/search/book-search-table";
 import { FormField } from "@/components/search/single-add-dialog";
-import { searchPeriodicalApi } from "@/lib/api";
-import { PeriodicalSearchRequest } from "@/types/dtos/book-search";
+import { searchSerialApi } from "@/lib/api";
+import { SerialSearchRequest } from "@/types/dtos/book-search";
 import { ApiKeyNotConfiguredError } from "@/lib/errors";
 import { excel } from "@/lib/excel";
 
-const initialData: PeriodicalPublication[] = [
+const initialData: SerialPublication[] = [
   {
     id: "1",
     author: "박목월",
@@ -70,12 +70,12 @@ const formFields: FormField[] = [
 ];
 
 export default function Home() {
-  const [data, setData] = useState<PeriodicalPublication[]>(initialData);
+  const [data, setData] = useState<SerialPublication[]>(initialData);
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
 
   const { trigger: searchMeta, isMutating: isSearching } = useSWRMutation(
-    "/search-copyright/periodical",
-    searchPeriodicalApi,
+    "/search-copyright/serial",
+    searchSerialApi,
   );
 
   // 체크박스 관련 상태 계산
@@ -103,7 +103,7 @@ export default function Home() {
   const handleSearch = async () => {
     try {
       // 현재 데이터를 API 요청 형태로 변환
-      const request: PeriodicalSearchRequest = {
+      const request: SerialSearchRequest = {
         items: data.map((item) => ({
           author: item.author,
           bookTitle: item.bookTitle,
@@ -174,7 +174,7 @@ export default function Home() {
 
   // 단건 추가하기
   const handleSingleAdd = (formData: FormData) => {
-    const newItem: PeriodicalPublication = {
+    const newItem: SerialPublication = {
       id: Date.now().toString(),
       author: formData.get("author") as string,
       bookTitle: formData.get("bookTitle") as string,
@@ -200,25 +200,23 @@ export default function Home() {
   // 엑셀 업로드
   const handleExcelUpload = (uploadedData: { [key: string]: string }[]) => {
     // PreviewData를 PeriodicalPublication 형태로 변환
-    const newItems: PeriodicalPublication[] = uploadedData.map(
-      (item, index) => ({
-        id: (Date.now() + index).toString(),
-        author: item.author || "",
-        bookTitle: item.bookTitle || "",
-        publisher: item.publisher || "",
-        publishYear: item.publishYear || "",
-        imageInfo: item.imageInfo || null,
-        articleTitle: item.articleTitle || "",
-        // 메타정보는 빈 상태로 초기화 (검색을 통해 채울 예정)
-        authorType: null,
-        birthYear: null,
-        deathYear: null,
-        controlNumber: null,
-        isni: null,
-        lastAffiliation: null,
-        remark: null,
-      }),
-    );
+    const newItems: SerialPublication[] = uploadedData.map((item, index) => ({
+      id: (Date.now() + index).toString(),
+      author: item.author || "",
+      bookTitle: item.bookTitle || "",
+      publisher: item.publisher || "",
+      publishYear: item.publishYear || "",
+      imageInfo: item.imageInfo || null,
+      articleTitle: item.articleTitle || "",
+      // 메타정보는 빈 상태로 초기화 (검색을 통해 채울 예정)
+      authorType: null,
+      birthYear: null,
+      deathYear: null,
+      controlNumber: null,
+      isni: null,
+      lastAffiliation: null,
+      remark: null,
+    }));
 
     // 기존 데이터에 새 항목들 추가
     setData((prev) => [...prev, ...newItems]);

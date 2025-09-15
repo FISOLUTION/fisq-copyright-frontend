@@ -6,12 +6,12 @@ export interface BaseSearchRequestItem {
   imageInfo: string | null;
 }
 
-export interface PeriodicalRequestItem extends BaseSearchRequestItem {
+export interface SerialRequestItem extends BaseSearchRequestItem {
   articleTitle: string;
 }
 
-export interface PeriodicalSearchRequest {
-  items: PeriodicalRequestItem[];
+export interface SerialSearchRequest {
+  items: SerialRequestItem[];
 }
 
 export interface BookSearchResponseItem {

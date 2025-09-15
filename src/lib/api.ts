@@ -1,13 +1,13 @@
 import {
   BookSearchResponse,
-  PeriodicalSearchRequest,
+  SerialSearchRequest,
 } from "@/types/dtos/book-search";
 import { apiKeyUtils } from "@/utils/api-key";
 import { ApiKeyNotConfiguredError } from "./errors";
 
-export async function searchPeriodicalApi(
+export async function searchSerialApi(
   url: string,
-  { arg }: { arg: PeriodicalSearchRequest },
+  { arg }: { arg: SerialSearchRequest },
 ): Promise<BookSearchResponse> {
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
   const fullUrl = `${baseUrl}${url}`;
