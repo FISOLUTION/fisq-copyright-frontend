@@ -4,6 +4,7 @@
 
 - **개발 서버**: `pnpm dev`
 - **린트**: `pnpm lint`
+- **shadcn 컴포넌트 추가**: `pnpm dlx shadcn-ui add [component-name]`
 
 ## 아키텍처 및 구조
 
@@ -27,8 +28,8 @@
 
 ### 컴포넌트
 
-- **shadcn/ui 컴포넌트**: `src/components/ui/`
-- **도서 검색 컴포넌트**: `src/components/search/`
+- **shadcn/ui 컴포넌트**: `src/components/ui/**`
+- **도서 검색 컴포넌트**: `src/components/search/**`
     - `BookSearchTable` - 도서 테이블 컴포넌트
     - `ActionToolbar` - 검색, 업로드, 다운로드 버튼
     - `SingleAddDialog` - 수동 항목 추가
@@ -37,8 +38,8 @@
 
 ### 타입
 
-- **API DTOs**: `src/types/dtos/`
-- **도메인 타입**: `src/types/`
+- **API DTOs**: `src/types/dtos/**`
+- **도메인 타입**: `src/types/**`
 - 연속간행물과 단행본은 기본 구조를 공유. 연속간행물은 추가로 저작물제목(`articleTitle`)을 가짐
 
 ### 흐름
