@@ -32,7 +32,9 @@ export default function LoadingOverlay({
             <Progress
               value={progressPercentage}
               max={100}
-              getValueLabel={(value) => `${progress.current}개 중 ${Math.round(value)}% 완료`}
+              getValueLabel={(value) =>
+                `${progress.current}개 중 ${Math.round(value)}% 완료`
+              }
               className="w-full"
             />
             <p className="text-muted-foreground text-center text-sm">
