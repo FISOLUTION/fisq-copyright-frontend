@@ -4,7 +4,7 @@
 
 - **개발 서버**: `pnpm dev`
 - **린트**: `pnpm lint`
-- **shadcn 컴포넌트 추가**: `pnpm dlx shadcn-ui add [component-name]`
+- **shadcn 컴포넌트 추가**: `pnpm dlx shadcn@latest add <component-name>`
 
 ## 아키텍처 및 구조
 
