@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import useSWRMutation from "swr/mutation";
 import {
   Card,
   CardContent,
@@ -17,8 +16,7 @@ import BookSearchTable, {
   MetaColumn,
 } from "@/components/search/book-search-table";
 import { FormField } from "@/components/search/single-add-dialog";
-import { searchMonographApi } from "@/lib/api";
-import { MonographSearchRequest } from "@/types/dtos/book-search";
+import { searchMonographItemApi } from "@/lib/api";
 import { ApiKeyNotConfiguredError } from "@/lib/errors";
 import { excel } from "@/lib/excel";
 
@@ -69,11 +67,11 @@ const formFields: FormField[] = [
 export default function Monograph() {
   const [data, setData] = useState<MonographPublication[]>(initialData);
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
-
-  const { trigger: searchMeta, isMutating: isSearching } = useSWRMutation(
-    "/search-copyright/monograph",
-    searchMonographApi,
-  );
+  const [isSearching, setIsSearching] = useState(false);
+  const [searchProgress, setSearchProgress] = useState({
+    current: 0,
+    total: 0,
+  });
 
   // 체크박스 관련 상태 계산
   const allSelected = data.length > 0 && selectedItems.length === data.length;
@@ -96,54 +94,80 @@ export default function Monograph() {
     );
   };
 
-  // 검색하기 (SWR을 사용한 API 검색)
+  // 검색하기 (개별 병렬 API 호출)
   const handleSearch = async () => {
+    if (data.length === 0) {
+      toast.error("검색할 데이터가 없습니다.");
+      return;
+    }
+
+    setIsSearching(true);
+    setSearchProgress({ current: 0, total: data.length });
+
     try {
-      // 현재 데이터를 API 요청 형태로 변환
-      const request: MonographSearchRequest = {
-        items: data.map((item) => ({
-          author: item.author,
-          bookTitle: item.bookTitle,
-          publisher: item.publisher,
-          publishYear: item.publishYear,
-          imageInfo: item.imageInfo,
-        })),
-      };
+      let completedCount = 0;
+      let successCount = 0;
+      const failedIndices: number[] = [];
+      const updatedItems: MonographPublication[] = [...data];
 
-      const response = await searchMeta(request);
-
-      // 성공한 항목들로 메타정보 업데이트
-      setData((prev) =>
-        prev.map((item, index) => {
-          const successItem = response.successItems.find(
-            (success) => success.index === index,
+      // 각 API 호출을 개별적으로 처리하여 실시간 진행률 업데이트
+      const promises = data.map(async (item, index) => {
+        try {
+          const responseItem = await searchMonographItemApi(
+            "/search-copyright/monograph",
+            {
+              author: item.author,
+              bookTitle: item.bookTitle,
+              publisher: item.publisher,
+              publishYear: item.publishYear,
+              imageInfo: item.imageInfo,
+            },
+            index,
           );
-          if (successItem) {
-            return {
-              ...item,
-              authorType: successItem.authorType,
-              birthYear: successItem.birthYear,
-              deathYear: successItem.deathYear,
-              controlNumber: successItem.controlNumber,
-              isni: successItem.isni,
-              lastAffiliation: successItem.lastAffiliation,
-              remark: successItem.remark,
-            };
-          }
-          return item;
-        }),
-      );
 
-      // 실패한 항목들 토스트로 알림
-      if (response.failedIndices.length > 0) {
-        const failedCount = response.failedIndices.length;
+          // 성공한 경우 데이터 업데이트
+          updatedItems[index] = {
+            ...item,
+            authorType: responseItem.authorType,
+            birthYear: responseItem.birthYear,
+            deathYear: responseItem.deathYear,
+            controlNumber: responseItem.controlNumber,
+            isni: responseItem.isni,
+            lastAffiliation: responseItem.lastAffiliation,
+            remark: responseItem.remark,
+          };
+          successCount++;
+        } catch (error) {
+          // API 키 에러는 상위로 전파
+          if (error instanceof ApiKeyNotConfiguredError) {
+            throw error;
+          }
+          console.error(`Search failed for item ${index}:`, error);
+          failedIndices.push(index);
+        } finally {
+          completedCount++;
+          setSearchProgress({ current: completedCount, total: data.length });
+        }
+      });
+
+      // 모든 API 호출 완료까지 대기
+      await Promise.all(promises);
+
+      // 최종 데이터 업데이트
+      setData(updatedItems);
+
+      // 결과 알림
+      if (failedIndices.length > 0) {
         toast.error(
-          `${failedCount}개 항목의 메타정보 검색에 실패했습니다. (인덱스: ${response.failedIndices.join(", ")})`,
+          `${failedIndices.length}개 항목의 메타정보 검색에 실패했습니다. (인덱스: ${failedIndices.join(", ")})`,
         );
       }
 
-      const successCount = response.successItems.length;
-      toast.success(`${successCount}개 항목의 메타정보 검색이 완료되었습니다.`);
+      if (successCount > 0) {
+        toast.success(
+          `${successCount}개 항목의 메타정보 검색이 완료되었습니다.`,
+        );
+      }
     } catch (error) {
       console.error("Search error:", error);
 
@@ -165,6 +189,9 @@ export default function Monograph() {
 
       // 기타 오류
       toast.error("메타정보 검색 중 오류가 발생했습니다.");
+    } finally {
+      setIsSearching(false);
+      setSearchProgress({ current: 0, total: 0 });
     }
   };
 
@@ -257,6 +284,7 @@ export default function Monograph() {
       <LoadingOverlay
         isLoading={isSearching}
         message="메타정보를 검색하는 중..."
+        progress={searchProgress.total > 0 ? searchProgress : undefined}
       />
 
       <Header />
