@@ -107,6 +107,8 @@ export default function Home() {
     setIsSearching(true);
     setSearchProgress({ current: 0, total: data.length });
 
+    const startTime = Date.now();
+
     try {
       let completedCount = 0;
       let successCount = 0;
@@ -171,8 +173,9 @@ export default function Home() {
       }
 
       if (successCount > 0) {
+        const elapsedSeconds = ((Date.now() - startTime) / 1000).toFixed(2);
         toast.success(
-          `${successCount}개 항목의 메타정보 검색이 완료되었습니다.`,
+          `${successCount}개 항목의 메타정보 검색이 완료되었습니다. (소요시간: ${elapsedSeconds}초)`,
         );
       }
     } catch (error) {
