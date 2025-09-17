@@ -156,6 +156,9 @@ export default function Monograph() {
       // 최종 데이터 업데이트
       setData(updatedItems);
 
+      // 진행률 바가 100%에 도달하는 것을 보여주기 위한 짧은 지연
+      await new Promise(resolve => setTimeout(resolve, 500));
+
       // 결과 알림
       if (failedIndices.length > 0) {
         toast.error(
