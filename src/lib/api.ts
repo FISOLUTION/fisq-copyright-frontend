@@ -12,7 +12,7 @@ export async function searchSerialItemApi(
   index: number,
 ): Promise<BookSearchResponseItem & { index: number }> {
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-  const fullUrl = `${baseUrl}${url}/single`;
+  const fullUrl = `${baseUrl}${url}`;
 
   const apiKey = apiKeyUtils.get();
 
@@ -44,7 +44,7 @@ export async function searchMonographItemApi(
   index: number,
 ): Promise<BookSearchResponseItem & { index: number }> {
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-  const fullUrl = `${baseUrl}${url}/single`;
+  const fullUrl = `${baseUrl}${url}`;
 
   const apiKey = apiKeyUtils.get();
 
