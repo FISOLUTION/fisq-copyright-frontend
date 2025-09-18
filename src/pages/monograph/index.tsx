@@ -116,7 +116,7 @@ export default function Monograph() {
       const promises = data.map(async (item, index) => {
         try {
           const responseItem = await searchMonographItemApi(
-            "/search-copyright/monograph",
+            "/search-copyright/monograph/single",
             {
               author: item.author,
               bookTitle: item.bookTitle,

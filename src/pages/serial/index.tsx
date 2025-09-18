@@ -119,7 +119,7 @@ export default function Home() {
       const promises = data.map(async (item, index) => {
         try {
           const responseItem = await searchSerialItemApi(
-            "/search-copyright/serial",
+            "/search-copyright/serial/single",
             {
               author: item.author,
               bookTitle: item.bookTitle,

@@ -10,15 +10,7 @@ export interface SerialRequestItem extends BaseSearchRequestItem {
   articleTitle: string;
 }
 
-export interface SerialSearchRequest {
-  items: SerialRequestItem[];
-}
-
 export type MonographRequestItem = BaseSearchRequestItem;
-
-export interface MonographSearchRequest {
-  items: MonographRequestItem[];
-}
 
 export interface BookSearchResponseItem {
   authorType: string | null;
@@ -28,9 +20,4 @@ export interface BookSearchResponseItem {
   isni: string | null;
   lastAffiliation: string | null;
   remark: string | null;
-}
-
-export interface BookSearchResponse {
-  successItems: BookSearchResponseItem[];
-  failedIndices: number[];
 }
