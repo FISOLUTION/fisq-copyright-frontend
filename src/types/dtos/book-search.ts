@@ -21,7 +21,6 @@ export interface MonographSearchRequest {
 }
 
 export interface BookSearchResponseItem {
-  index: number;
   authorType: string | null;
   birthYear: string | null;
   deathYear: string | null;
