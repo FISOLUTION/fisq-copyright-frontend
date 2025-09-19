@@ -16,7 +16,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Upload } from "lucide-react";
 import * as XLSX from "xlsx";
 import { BasicColumn } from "./book-search-table";
@@ -55,10 +54,8 @@ export default function ExcelUploadDialog({
           const worksheet = workbook.Sheets[workbook.SheetNames[0]];
           const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
 
-          // 첫 번째 행을 헤더로 사용하고, 나머지를 데이터로 처리
           const rows = (jsonData.slice(1) as string[][]) || [];
 
-          // 기본정보 컬럼들에 맞춰서 데이터 변환
           const processedData: PreviewData[] = rows.map((row) => {
             const item: PreviewData = {};
             columns.forEach((col, index) => {
@@ -123,8 +120,6 @@ export default function ExcelUploadDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      {/* 기본 max-w는 shadcn(DialogContent) 기본값(max-w-lg)을 유지하고,
-          작은 화면에서는 기본값을 쓰되 sm 이상에서만 넓혀줍니다. */}
       <DialogContent className="sm:max-w-6xl">
         <DialogHeader>
           <DialogTitle>엑셀 업로드</DialogTitle>
@@ -134,95 +129,90 @@ export default function ExcelUploadDialog({
           </DialogDescription>
         </DialogHeader>
 
-        {/* ScrollArea를 사용해 shadcn 기본 스크롤 스타일을 존중 */}
-        <ScrollArea className="h-[60vh] min-w-0">
-          <div className="space-y-4 pr-4">
-            {/* 드롭존 */}
-            <div
-              role="button"
-              tabIndex={0}
-              onKeyDown={(e) =>
-                (e.key === "Enter" || e.key === " ") && openFilePicker()
-              }
-              className="hover:bg-muted/50 rounded-lg border border-dashed p-8 text-center transition-colors"
-              onDrop={handleDrop}
-              onDragOver={handleDragOver}
-              onDragEnter={handleDragEnter}
-              onClick={openFilePicker}
-              aria-label="엑셀 파일 업로드"
+        <div className="min-w-0 space-y-4">
+          {/* 드롭존 */}
+          <div
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) =>
+              (e.key === "Enter" || e.key === " ") && openFilePicker()
+            }
+            className="hover:bg-muted/50 rounded-lg border border-dashed p-8 text-center transition-colors"
+            onDrop={handleDrop}
+            onDragOver={handleDragOver}
+            onDragEnter={handleDragEnter}
+            onClick={openFilePicker}
+            aria-label="엑셀 파일 업로드"
+          >
+            <Upload className="text-muted-foreground mx-auto mb-4 h-12 w-12" />
+            <p className="mb-2">엑셀 파일을 드래그하거나 클릭하여 업로드</p>
+            <p className="text-muted-foreground text-sm">
+              *.xlsx, *.xls 파일만 지원
+            </p>
+            <input
+              ref={fileInputRef}
+              type="file"
+              className="hidden"
+              accept=".xlsx,.xls"
+              onChange={handleFileUpload}
+            />
+            <Button
+              variant="outline"
+              className="mt-4"
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                openFilePicker();
+              }}
             >
-              <Upload className="text-muted-foreground mx-auto mb-4 h-12 w-12" />
-              <p className="mb-2">엑셀 파일을 드래그하거나 클릭하여 업로드</p>
-              <p className="text-muted-foreground text-sm">
-                *.xlsx, *.xls 파일만 지원
-              </p>
-              <input
-                ref={fileInputRef}
-                type="file"
-                className="hidden"
-                accept=".xlsx,.xls"
-                onChange={handleFileUpload}
-              />
-              <Button
-                variant="outline"
-                className="mt-4"
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  openFilePicker();
-                }}
-              >
-                파일 선택
-              </Button>
-              {fileName && (
-                <p className="text-muted-foreground mt-2 text-sm">{fileName}</p>
-              )}
-            </div>
-
-            {/* 미리보기 테이블 */}
-            <div>
-              <h4 className="mb-2 font-medium">미리보기 ({rowCount}행)</h4>
-              {currentData.length > 0 ? (
-                <ScrollArea className="w-full rounded-md border">
-                  <div className="w-max">
-                    <Table className="min-w-max table-auto">
-                      <TableHeader>
-                        <TableRow>
-                          {columns.map((column) => (
-                            <TableHead
-                              key={column.key}
-                              className="whitespace-nowrap"
-                            >
-                              {column.label}
-                            </TableHead>
-                          ))}
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {currentData.map((row, index) => (
-                          <TableRow key={index}>
-                            {columns.map((column) => (
-                              <TableCell
-                                key={column.key}
-                                className="whitespace-nowrap"
-                              >
-                                {row[column.key] || ""}
-                              </TableCell>
-                            ))}
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </div>
-                </ScrollArea>
-              ) : (
-                <div className="text-muted-foreground rounded-md border p-8 text-center text-sm">
-                  엑셀 파일을 업로드하면 여기에 미리보기가 표시됩니다.
-                </div>
-              )}
-            </div>
+              파일 선택
+            </Button>
+            {fileName && (
+              <p className="text-muted-foreground mt-2 text-sm">{fileName}</p>
+            )}
           </div>
-        </ScrollArea>
+
+          {/* 미리보기 테이블 */}
+          <div>
+            <h4 className="mb-2 font-medium">미리보기 ({rowCount}행)</h4>
+            {currentData.length > 0 ? (
+              <div className="max-h-[45vh] w-full overflow-x-auto rounded-md border">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      {columns.map((column) => (
+                        <TableHead
+                          key={column.key}
+                          className="whitespace-nowrap"
+                        >
+                          {column.label}
+                        </TableHead>
+                      ))}
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {currentData.map((row, index) => (
+                      <TableRow key={index}>
+                        {columns.map((column) => (
+                          <TableCell
+                            key={column.key}
+                            className="whitespace-nowrap"
+                          >
+                            {row[column.key] || ""}
+                          </TableCell>
+                        ))}
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            ) : (
+              <div className="text-muted-foreground rounded-md border p-8 text-center text-sm">
+                엑셀 파일을 업로드하면 여기에 미리보기가 표시됩니다.
+              </div>
+            )}
+          </div>
+        </div>
 
         <DialogFooter>
           <Button
