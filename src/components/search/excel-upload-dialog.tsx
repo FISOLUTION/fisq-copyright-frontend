@@ -183,36 +183,38 @@ export default function ExcelUploadDialog({
             <div>
               <h4 className="mb-2 font-medium">미리보기 ({rowCount}행)</h4>
               {currentData.length > 0 ? (
-                <div className="overflow-x-auto rounded-md border">
-                  <Table className="min-w-full">
-                    <TableHeader>
-                      <TableRow>
-                        {columns.map((column) => (
-                          <TableHead
-                            key={column.key}
-                            className="whitespace-nowrap"
-                          >
-                            {column.label}
-                          </TableHead>
-                        ))}
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {currentData.map((row, index) => (
-                        <TableRow key={index}>
+                <ScrollArea className="w-full rounded-md border">
+                  <div className="w-max">
+                    <Table className="min-w-max table-auto">
+                      <TableHeader>
+                        <TableRow>
                           {columns.map((column) => (
-                            <TableCell
+                            <TableHead
                               key={column.key}
                               className="whitespace-nowrap"
                             >
-                              {row[column.key] || ""}
-                            </TableCell>
+                              {column.label}
+                            </TableHead>
                           ))}
                         </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </div>
+                      </TableHeader>
+                      <TableBody>
+                        {currentData.map((row, index) => (
+                          <TableRow key={index}>
+                            {columns.map((column) => (
+                              <TableCell
+                                key={column.key}
+                                className="whitespace-nowrap"
+                              >
+                                {row[column.key] || ""}
+                              </TableCell>
+                            ))}
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </div>
+                </ScrollArea>
               ) : (
                 <div className="text-muted-foreground rounded-md border p-8 text-center text-sm">
                   엑셀 파일을 업로드하면 여기에 미리보기가 표시됩니다.
