@@ -135,8 +135,8 @@ export default function ExcelUploadDialog({
         </DialogHeader>
 
         {/* ScrollArea를 사용해 shadcn 기본 스크롤 스타일을 존중 */}
-        <ScrollArea className="h-[60vh] min-w-0 pr-4">
-          <div className="space-y-4">
+        <ScrollArea className="h-[60vh] min-w-0">
+          <div className="space-y-4 pr-4">
             {/* 드롭존 */}
             <div
               role="button"
