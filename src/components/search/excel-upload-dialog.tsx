@@ -125,7 +125,7 @@ export default function ExcelUploadDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       {/* 기본 max-w는 shadcn(DialogContent) 기본값(max-w-lg)을 유지하고,
           작은 화면에서는 기본값을 쓰되 sm 이상에서만 넓혀줍니다. */}
-      <DialogContent className="sm:max-w-2xl">
+      <DialogContent className="sm:max-w-6xl">
         <DialogHeader>
           <DialogTitle>엑셀 업로드</DialogTitle>
           <DialogDescription>
