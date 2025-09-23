@@ -11,10 +11,6 @@ export function excel<T extends BookSearchData>(
   metaColumns: MetaColumn[],
   filename: string = "search-results",
 ) {
-  if (data.length === 0) {
-    return;
-  }
-
   const allColumns = [...basicColumns, ...metaColumns];
 
   const headers = allColumns.map((col) => col.label);
