@@ -7,12 +7,13 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { toast } from "sonner";
-import { SerialPublication } from "@/types/serial-publication";
+import { SerialPublication } from "@/types/publication";
 import Header from "@/components/header";
 import LoadingOverlay from "@/components/search/loading-overlay";
 import ActionToolbar from "@/components/search/action-toolbar";
 import BookSearchTable, {
   BasicColumn,
+  CopyrightColumn,
   MetaColumn,
 } from "@/components/search/book-search-table";
 import { FormField } from "@/components/search/single-add-dialog";
@@ -36,6 +37,8 @@ const initialData: SerialPublication[] = [
     isni: null,
     lastAffiliation: null,
     remark: null,
+    isAuthorUnknown: null,
+    hasCopyright: null,
   },
 ];
 
@@ -56,6 +59,11 @@ const metaColumns: MetaColumn[] = [
   { key: "isni", label: "ISNI", width: "w-40" },
   { key: "lastAffiliation", label: "거소 및 단체정보", width: "w-32" },
   { key: "remark", label: "비고", width: "w-40" },
+];
+
+const copyrightColumns: CopyrightColumn[] = [
+  { key: "isAuthorUnknown", label: "권리자 불명 여부", width: "w-28" },
+  { key: "hasCopyright", label: "저작권 여부", width: "w-24" },
 ];
 
 const formFields: FormField[] = [
@@ -141,6 +149,9 @@ export default function Home() {
             isni: responseItem.isni,
             lastAffiliation: responseItem.lastAffiliation,
             remark: responseItem.remark,
+            // 저작권 결과 계산
+            isAuthorUnknown: !responseItem.lastAffiliation,
+            hasCopyright: true,
           };
           successCount++;
         } catch (error) {
@@ -150,6 +161,12 @@ export default function Home() {
           }
           console.error(`Search failed for item ${index}:`, error);
           failedIndices.push(index);
+          // 실패한 경우 저작권 여부는 false로 표시, 권리자 불명 여부는 알 수 없음(null)
+          updatedItems[index] = {
+            ...item,
+            hasCopyright: false,
+            isAuthorUnknown: null,
+          };
         } finally {
           completedCount++;
           setSearchProgress({ current: completedCount, total: data.length });
@@ -222,6 +239,8 @@ export default function Home() {
       isni: null,
       lastAffiliation: null,
       remark: null,
+      isAuthorUnknown: null,
+      hasCopyright: null,
     };
 
     setData((prev) => [...prev, newItem]);
@@ -249,6 +268,8 @@ export default function Home() {
       isni: null,
       lastAffiliation: null,
       remark: null,
+      isAuthorUnknown: null,
+      hasCopyright: null,
     }));
 
     // 기존 데이터에 새 항목들 추가
@@ -264,7 +285,12 @@ export default function Home() {
 
     try {
       const filename = `연속간행물_검색결과_${new Date().toISOString().split("T")[0]}`;
-      excel(selectedData, basicColumns, metaColumns, filename);
+      excel(
+        selectedData,
+        basicColumns,
+        [...metaColumns, ...copyrightColumns],
+        filename,
+      );
       toast.success(
         `${selectedData.length}개 항목에 대한 엑셀 파일 다운로드가 시작되었습니다.`,
       );
@@ -333,6 +359,7 @@ export default function Home() {
               onSelectItem={handleSelectItem}
               basicColumns={basicColumns}
               metaColumns={metaColumns}
+              copyrightColumns={copyrightColumns}
               allSelected={allSelected}
             />
           </CardContent>
