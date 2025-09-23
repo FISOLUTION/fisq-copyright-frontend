@@ -45,7 +45,7 @@ interface BookSearchTableProps<T extends BookSearchData> {
 
 function renderValue(value: string | boolean | number | null | undefined) {
   if (typeof value === "boolean") {
-    return value ? "예" : "아니오";
+    return value ? "O" : "X";
   }
 
   return value ?? "-";
