@@ -68,7 +68,7 @@ export default function BookSearchTable<T extends BookSearchData>({
           <TableRow className="hover:bg-transparent">
             <TableHead
               rowSpan={2}
-              className="hover:bg-muted/50 relative cursor-pointer transition-colors"
+              className="hover:bg-muted/50 relative cursor-pointer border-r transition-colors"
             >
               <div className="flex h-full w-full items-center justify-center px-2">
                 <Checkbox checked={allSelected} onCheckedChange={onSelectAll} />
@@ -76,13 +76,13 @@ export default function BookSearchTable<T extends BookSearchData>({
             </TableHead>
             <TableHead
               colSpan={basicColumns.length}
-              className="hover:bg-muted/50 cursor-default border-b-0 transition-colors"
+              className={`hover:bg-muted/50 cursor-default border-b-0 transition-colors ${metaColumns.length > 0 ? "border-r" : ""}`}
             >
               기본정보
             </TableHead>
             <TableHead
               colSpan={metaColumns.length}
-              className="hover:bg-muted/50 cursor-default border-b-0 transition-colors"
+              className={`hover:bg-muted/50 cursor-default border-b-0 transition-colors ${copyrightColumns.length > 0 ? "border-r" : ""}`}
             >
               메타정보
             </TableHead>
@@ -96,18 +96,18 @@ export default function BookSearchTable<T extends BookSearchData>({
             )}
           </TableRow>
           <TableRow className="hover:bg-transparent">
-            {basicColumns.map((column) => (
+            {basicColumns.map((column, idx) => (
               <TableHead
                 key={column.key}
-                className={`${column.width} hover:bg-muted/50 cursor-default transition-colors`}
+                className={`${column.width} hover:bg-muted/50 cursor-default transition-colors ${idx === basicColumns.length - 1 && metaColumns.length > 0 ? "border-r" : ""}`}
               >
                 {column.label}
               </TableHead>
             ))}
-            {metaColumns.map((column) => (
+            {metaColumns.map((column, idx) => (
               <TableHead
                 key={column.key}
-                className={`${column.width} hover:bg-muted/50 cursor-default transition-colors`}
+                className={`${column.width} hover:bg-muted/50 cursor-default transition-colors ${idx === metaColumns.length - 1 && copyrightColumns.length > 0 ? "border-r" : ""}`}
               >
                 {column.label}
               </TableHead>
@@ -125,7 +125,7 @@ export default function BookSearchTable<T extends BookSearchData>({
         <TableBody>
           {data.map((item) => (
             <TableRow key={item.id}>
-              <TableCell className="text-center">
+              <TableCell className="border-r text-center">
                 <div className="flex items-center justify-center">
                   <Checkbox
                     checked={selectedItems.includes(item.id)}
@@ -134,14 +134,29 @@ export default function BookSearchTable<T extends BookSearchData>({
                 </div>
               </TableCell>
 
-              {basicColumns.map((column) => (
-                <TableCell key={column.key}>
+              {basicColumns.map((column, idx) => (
+                <TableCell
+                  key={column.key}
+                  className={
+                    idx === basicColumns.length - 1 && metaColumns.length > 0
+                      ? "border-r"
+                      : ""
+                  }
+                >
                   {renderValue(item[column.key])}
                 </TableCell>
               ))}
 
-              {metaColumns.map((column) => (
-                <TableCell key={column.key}>
+              {metaColumns.map((column, idx) => (
+                <TableCell
+                  key={column.key}
+                  className={
+                    idx === metaColumns.length - 1 &&
+                    copyrightColumns.length > 0
+                      ? "border-r"
+                      : ""
+                  }
+                >
                   {renderValue(item[column.key])}
                 </TableCell>
               ))}
