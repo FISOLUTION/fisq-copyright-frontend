@@ -256,15 +256,14 @@ export default function Monograph() {
 
   // 엑셀 다운로드
   const handleExcelDownload = () => {
-    if (data.length === 0) {
-      toast.error("다운로드할 데이터가 없습니다.");
-      return;
-    }
+    const selectedData = data.filter((item) => selectedItems.includes(item.id));
 
     try {
       const filename = `단행본_검색결과_${new Date().toISOString().split("T")[0]}`;
-      excel(data, basicColumns, metaColumns, filename);
-      toast.success("엑셀 파일 다운로드가 시작되었습니다.");
+      excel(selectedData, basicColumns, metaColumns, filename);
+      toast.success(
+        `${selectedData.length}개 항목에 대한 엑셀 파일 다운로드가 시작되었습니다.`,
+      );
     } catch (error) {
       console.error("Excel download error:", error);
       toast.error("엑셀 파일 다운로드 중 오류가 발생했습니다.");
