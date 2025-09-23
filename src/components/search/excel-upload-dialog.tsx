@@ -53,7 +53,10 @@ export default function ExcelUploadDialog({
           const data = e.target?.result;
           const workbook = XLSX.read(data, { type: "array" });
           const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-          const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+          const jsonData = XLSX.utils.sheet_to_json(worksheet, {
+            header: 1,
+            raw: false,
+          });
 
           // 첫 번째 행을 헤더로 사용하고, 나머지를 데이터로 처리
           const rows = (jsonData.slice(1) as string[][]) || [];
