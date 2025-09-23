@@ -86,14 +86,12 @@ export default function BookSearchTable<T extends BookSearchData>({
             >
               메타정보
             </TableHead>
-            {copyrightColumns.length > 0 && (
-              <TableHead
-                colSpan={copyrightColumns.length}
-                className="hover:bg-muted/50 cursor-default border-b-0 transition-colors"
-              >
-                저작권 결과
-              </TableHead>
-            )}
+            <TableHead
+              colSpan={copyrightColumns.length}
+              className="hover:bg-muted/50 cursor-default border-b-0 transition-colors"
+            >
+              저작권 결과
+            </TableHead>
           </TableRow>
           <TableRow className="hover:bg-transparent">
             {basicColumns.map((column, idx) => (
