@@ -21,6 +21,12 @@ export interface MetaColumn {
   width: string;
 }
 
+export interface CopyrightColumn {
+  key: string;
+  label: string;
+  width: string;
+}
+
 export interface BookSearchData {
   id: string;
   [key: string]: string | boolean | number | null | undefined;
@@ -33,7 +39,16 @@ interface BookSearchTableProps<T extends BookSearchData> {
   onSelectItem: (id: string) => void;
   basicColumns: BasicColumn[];
   metaColumns: MetaColumn[];
+  copyrightColumns: CopyrightColumn[];
   allSelected: boolean;
+}
+
+function renderValue(value: string | boolean | number | null | undefined) {
+  if (typeof value === "boolean") {
+    return value ? "예" : "아니오";
+  }
+
+  return value ?? "-";
 }
 
 export default function BookSearchTable<T extends BookSearchData>({
@@ -43,6 +58,7 @@ export default function BookSearchTable<T extends BookSearchData>({
   onSelectItem,
   basicColumns,
   metaColumns,
+  copyrightColumns,
   allSelected,
 }: BookSearchTableProps<T>) {
   return (
@@ -70,6 +86,14 @@ export default function BookSearchTable<T extends BookSearchData>({
             >
               메타정보
             </TableHead>
+            {copyrightColumns.length > 0 && (
+              <TableHead
+                colSpan={copyrightColumns.length}
+                className="hover:bg-muted/50 cursor-default border-b-0 transition-colors"
+              >
+                저작권 결과
+              </TableHead>
+            )}
           </TableRow>
           <TableRow className="hover:bg-transparent">
             {basicColumns.map((column) => (
@@ -81,6 +105,14 @@ export default function BookSearchTable<T extends BookSearchData>({
               </TableHead>
             ))}
             {metaColumns.map((column) => (
+              <TableHead
+                key={column.key}
+                className={`${column.width} hover:bg-muted/50 cursor-default transition-colors`}
+              >
+                {column.label}
+              </TableHead>
+            ))}
+            {copyrightColumns.map((column) => (
               <TableHead
                 key={column.key}
                 className={`${column.width} hover:bg-muted/50 cursor-default transition-colors`}
@@ -103,11 +135,21 @@ export default function BookSearchTable<T extends BookSearchData>({
               </TableCell>
 
               {basicColumns.map((column) => (
-                <TableCell key={column.key}>{item[column.key] || ""}</TableCell>
+                <TableCell key={column.key}>
+                  {renderValue(item[column.key])}
+                </TableCell>
               ))}
 
               {metaColumns.map((column) => (
-                <TableCell key={column.key}>{item[column.key] || ""}</TableCell>
+                <TableCell key={column.key}>
+                  {renderValue(item[column.key])}
+                </TableCell>
+              ))}
+
+              {copyrightColumns.map((column) => (
+                <TableCell key={column.key}>
+                  {renderValue(item[column.key])}
+                </TableCell>
               ))}
             </TableRow>
           ))}
