@@ -20,6 +20,7 @@ import { FormField } from "@/components/search/single-add-dialog";
 import { searchMonographItemApi } from "@/lib/api";
 import { ApiKeyNotConfiguredError } from "@/lib/errors";
 import { excel } from "@/lib/excel";
+import { determineHasCopyright } from "@/lib/copyright";
 
 const initialData: MonographPublication[] = [
   {
@@ -145,9 +146,13 @@ export default function Monograph() {
             isni: responseItem.isni,
             lastAffiliation: responseItem.lastAffiliation,
             remark: responseItem.remark,
-            // 저작권 결과 계산
+            // 저작권 결과 계산 (공통 로직)
             isAuthorUnknown: !responseItem.lastAffiliation,
-            hasCopyright: true,
+            hasCopyright: determineHasCopyright(
+              responseItem.authorType,
+              responseItem.deathYear,
+              item.publishYear,
+            ),
           };
           successCount++;
         } catch (error) {
@@ -157,10 +162,10 @@ export default function Monograph() {
           }
           console.error(`Search failed for item ${index}:`, error);
           failedIndices.push(index);
-          // 실패한 경우 저작권 여부는 false로 표시, 권리자 불명 여부는 알 수 없음(null)
+          // 실패한 경우 저작권 여부는 null로 표시, 권리자 불명 여부는 알 수 없음(null)
           updatedItems[index] = {
             ...item,
-            hasCopyright: false,
+            hasCopyright: null,
             isAuthorUnknown: null,
           };
         } finally {
