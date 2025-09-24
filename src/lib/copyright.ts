@@ -6,9 +6,7 @@
  * @param value 4자리 연도 문자열(예: "1999"). null 허용
  * @returns 파싱된 연도(0~9999) 또는 null
  */
-export function parseFourDigitYear(
-  value: string | null,
-): number | null {
+export function parseFourDigitYear(value: string | null): number | null {
   if (!value) return null;
   const trimmed = String(value).trim();
   if (/^\d{4}$/.test(trimmed)) {
@@ -25,9 +23,7 @@ export function parseFourDigitYear(
  * @param publishYear 발행년도 원본 문자열(예: "20080401", "2008-04-01"). null 허용
  * @returns 파싱된 연도 또는 null
  */
-export function extractPublishYear(
-  publishYear: string | null,
-): number | null {
+export function extractPublishYear(publishYear: string | null): number | null {
   if (!publishYear) return null;
   const s = String(publishYear).trim();
   if (s.length < 4) return null;
