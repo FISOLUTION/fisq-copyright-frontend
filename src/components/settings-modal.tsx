@@ -8,7 +8,16 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { apiKeyUtils } from "@/utils/api-key";
+import { aiModeUtils } from "@/utils/ai-mode";
+import { AIMode, DEFAULT_AI_MODE } from "@/types/ai-mode";
 
 interface SettingsModalProps {
   isOpen: boolean;
@@ -17,11 +26,14 @@ interface SettingsModalProps {
 
 export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   const [apiKey, setApiKey] = useState("");
+  const [aiMode, setAiMode] = useState<AIMode>(DEFAULT_AI_MODE);
 
   useEffect(() => {
     if (isOpen) {
       const savedApiKey = apiKeyUtils.get();
       setApiKey(savedApiKey || "");
+      const savedAiMode = aiModeUtils.get();
+      setAiMode(savedAiMode);
     }
   }, [isOpen]);
 
@@ -29,12 +41,15 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
     if (apiKey.trim()) {
       apiKeyUtils.set(apiKey.trim());
     }
+    aiModeUtils.set(aiMode);
     onClose();
   };
 
   const handleReset = () => {
     setApiKey("");
     apiKeyUtils.remove();
+    setAiMode(DEFAULT_AI_MODE);
+    aiModeUtils.remove();
   };
 
   return (
@@ -54,6 +69,21 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                 value={apiKey}
                 onChange={(e) => setApiKey(e.target.value)}
               />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="ai-mode">AI 검색 모드</Label>
+              <Select
+                value={aiMode}
+                onValueChange={(value) => setAiMode(value as AIMode)}
+              >
+                <SelectTrigger id="ai-mode">
+                  <SelectValue placeholder="AI 모드를 선택하세요" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value={AIMode.GEMINI}>Gemini</SelectItem>
+                  <SelectItem value={AIMode.OPENAI}>OpenAI</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
           <div className="flex justify-between gap-2 pt-6">

@@ -4,6 +4,7 @@ import {
   SerialRequestItem,
 } from "@/types/dtos/book-search";
 import { apiKeyUtils } from "@/utils/api-key";
+import { aiModeUtils } from "@/utils/ai-mode";
 import { ApiKeyNotConfiguredError } from "./errors";
 
 export async function searchSerialItemApi(
@@ -12,7 +13,8 @@ export async function searchSerialItemApi(
   index: number,
 ): Promise<BookSearchResponseItem & { index: number }> {
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-  const fullUrl = `${baseUrl}${url}`;
+  const aiMode = aiModeUtils.get();
+  const fullUrl = `${baseUrl}${url}?mode=${aiMode}`;
 
   const apiKey = apiKeyUtils.get();
 
@@ -44,7 +46,8 @@ export async function searchMonographItemApi(
   index: number,
 ): Promise<BookSearchResponseItem & { index: number }> {
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-  const fullUrl = `${baseUrl}${url}`;
+  const aiMode = aiModeUtils.get();
+  const fullUrl = `${baseUrl}${url}?mode=${aiMode}`;
 
   const apiKey = apiKeyUtils.get();
 
