@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/select";
 import { apiKeyUtils } from "@/utils/api-key";
 import { aiModeUtils } from "@/utils/ai-mode";
-import { AIMode, DEFAULT_AI_MODE } from "@/types/ai-mode";
+import { AIMode, AIModeValue, DEFAULT_AI_MODE } from "@/types/ai-mode";
 
 interface SettingsModalProps {
   isOpen: boolean;
@@ -26,7 +26,7 @@ interface SettingsModalProps {
 
 export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   const [apiKey, setApiKey] = useState("");
-  const [aiMode, setAiMode] = useState<AIMode>(DEFAULT_AI_MODE);
+  const [aiMode, setAiMode] = useState<AIModeValue>(DEFAULT_AI_MODE);
 
   useEffect(() => {
     if (isOpen) {
@@ -74,14 +74,17 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
               <Label htmlFor="ai-mode">AI 검색 모드</Label>
               <Select
                 value={aiMode}
-                onValueChange={(value) => setAiMode(value as AIMode)}
+                onValueChange={(value) => setAiMode(value as AIModeValue)}
               >
                 <SelectTrigger id="ai-mode">
                   <SelectValue placeholder="AI 모드를 선택하세요" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value={AIMode.GEMINI}>Gemini</SelectItem>
-                  <SelectItem value={AIMode.OPENAI}>OpenAI</SelectItem>
+                  {Object.values(AIMode).map((mode) => (
+                    <SelectItem key={mode.value} value={mode.value}>
+                      {mode.label}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
