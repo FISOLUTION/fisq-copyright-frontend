@@ -17,7 +17,14 @@ export function excel<T extends BookSearchData>(
 
   const worksheetData = [
     headers,
-    ...data.map((row) => allColumns.map((col) => row[col.key] || "")),
+    ...data.map((row) =>
+      allColumns.map((col) => {
+        const value = row[col.key];
+        if (value === null) return "";
+        if (typeof value === "boolean") return value ? "TRUE" : "FALSE";
+        return value || "";
+      }),
+    ),
   ];
 
   const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
