@@ -20,7 +20,6 @@ import { FormField } from "@/components/search/single-add-dialog";
 import { searchSerialItemApi } from "@/lib/api";
 import { ApiKeyNotConfiguredError } from "@/lib/errors";
 import { excel } from "@/lib/excel";
-import { determineHasCopyright } from "@/lib/copyright";
 
 const initialData: SerialPublication[] = [
   {
@@ -38,6 +37,7 @@ const initialData: SerialPublication[] = [
     isni: null,
     lastAffiliation: null,
     remark: null,
+    webSearchUtilized: null,
     isAuthorUnknown: null,
     hasCopyright: null,
   },
@@ -60,6 +60,7 @@ const metaColumns: MetaColumn[] = [
   { key: "isni", label: "ISNI", width: "w-40" },
   { key: "lastAffiliation", label: "거소 및 단체정보", width: "w-32" },
   { key: "remark", label: "비고", width: "w-40" },
+  { key: "webSearchUtilized", label: "웹 활용 여부", width: "w-24" },
 ];
 
 const copyrightColumns: CopyrightColumn[] = [
@@ -150,13 +151,9 @@ export default function Home() {
             isni: responseItem.isni,
             lastAffiliation: responseItem.lastAffiliation,
             remark: responseItem.remark,
-            // 저작권 결과 계산 (공통 로직)
-            isAuthorUnknown: !responseItem.lastAffiliation,
-            hasCopyright: determineHasCopyright(
-              responseItem.authorType,
-              responseItem.deathYear,
-              item.publishYear,
-            ),
+            webSearchUtilized: responseItem.webSearchUtilized,
+            isAuthorUnknown: responseItem.isAuthorUnknown,
+            hasCopyright: responseItem.hasCopyright,
           };
           successCount++;
         } catch (error) {
@@ -244,6 +241,7 @@ export default function Home() {
       isni: null,
       lastAffiliation: null,
       remark: null,
+      webSearchUtilized: null,
       isAuthorUnknown: null,
       hasCopyright: null,
     };
@@ -273,6 +271,7 @@ export default function Home() {
       isni: null,
       lastAffiliation: null,
       remark: null,
+      webSearchUtilized: null,
       isAuthorUnknown: null,
       hasCopyright: null,
     }));

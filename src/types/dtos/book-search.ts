@@ -20,4 +20,7 @@ export interface BookSearchResponseItem {
   isni: string | null;
   lastAffiliation: string | null;
   remark: string | null;
+  webSearchUtilized: boolean | null;
+  isAuthorUnknown: boolean | null;
+  hasCopyright: boolean | null;
 }

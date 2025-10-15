@@ -23,6 +23,7 @@ export interface SerialPublication extends BaseBookData {
   isni: string | null;
   lastAffiliation: string | null;
   remark: string | null;
+  webSearchUtilized: boolean | null;
 
   // 저작권 결과
   isAuthorUnknown?: boolean | null; // lastAffiliation 여부에 따라 결정
@@ -46,6 +47,7 @@ export interface MonographPublication extends BaseBookData {
   isni: string | null;
   lastAffiliation: string | null;
   remark: string | null;
+  webSearchUtilized: boolean | null;
 
   // 저작권 결과 (향후 필요 시 활용)
   isAuthorUnknown: boolean | null;
