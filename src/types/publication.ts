@@ -12,7 +12,7 @@ export interface SerialPublication extends BaseBookData {
   bookTitle: string | null;
   publisher: string;
   publishYear: string;
-  imageInfo: string | null;
+  additionalInfo: string | null;
   articleTitle: string;
 
   // 메타정보 (SerialResponseItem 기반, 기본정보 중복 제외)
@@ -37,7 +37,7 @@ export interface MonographPublication extends BaseBookData {
   bookTitle: string | null;
   publisher: string;
   publishYear: string;
-  imageInfo: string | null;
+  additionalInfo: string | null;
 
   // 메타정보 (BookSearchResponseItem 기반)
   authorType: string | null;

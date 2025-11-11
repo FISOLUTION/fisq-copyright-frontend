@@ -3,7 +3,7 @@ export interface BaseSearchRequestItem {
   bookTitle: string | null;
   publisher: string;
   publishYear: string;
-  imageInfo: string | null;
+  additionalInfo: string | null;
 }
 
 export interface SerialRequestItem extends BaseSearchRequestItem {

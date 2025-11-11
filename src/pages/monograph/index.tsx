@@ -28,7 +28,7 @@ const initialData: MonographPublication[] = [
     bookTitle: "광양만권 사람들",
     publisher: "광양만권 사람들",
     publishYear: "20080401",
-    imageInfo: null,
+    additionalInfo: null,
     authorType: null,
     birthYear: null,
     deathYear: null,
@@ -47,7 +47,7 @@ const basicColumns: BasicColumn[] = [
   { key: "author", label: "저작자명", width: "w-24" },
   { key: "publisher", label: "출판사명", width: "w-28" },
   { key: "publishYear", label: "발행년도", width: "w-20" },
-  { key: "imageInfo", label: "이미지 정보", width: "w-30" },
+  { key: "additionalInfo", label: "추가 정보", width: "w-30" },
 ];
 
 const metaColumns: MetaColumn[] = [
@@ -71,7 +71,7 @@ const formFields: FormField[] = [
   { key: "author", label: "저작자명", type: "text", required: true },
   { key: "publisher", label: "출판사명", type: "text", required: true },
   { key: "publishYear", label: "발행년도", type: "text", required: true },
-  { key: "imageInfo", label: "이미지 정보", type: "text", required: false },
+  { key: "additionalInfo", label: "추가 정보", type: "text", required: false },
 ];
 
 export default function Monograph() {
@@ -132,7 +132,7 @@ export default function Monograph() {
               bookTitle: item.bookTitle,
               publisher: item.publisher,
               publishYear: item.publishYear,
-              imageInfo: item.imageInfo,
+              additionalInfo: item.additionalInfo,
             },
             index,
           );
@@ -228,7 +228,7 @@ export default function Monograph() {
       bookTitle: formData.get("bookTitle") as string,
       publisher: formData.get("publisher") as string,
       publishYear: formData.get("publishYear") as string,
-      imageInfo: (formData.get("imageInfo") as string) || null,
+      additionalInfo: (formData.get("additionalInfo") as string) || null,
       authorType: null,
       birthYear: null,
       deathYear: null,
@@ -257,7 +257,7 @@ export default function Monograph() {
         bookTitle: item.bookTitle || "",
         publisher: item.publisher || "",
         publishYear: item.publishYear || "",
-        imageInfo: item.imageInfo || null,
+        additionalInfo: item.additionalInfo || null,
         // 메타정보는 빈 상태로 초기화 (검색을 통해 채울 예정)
         authorType: null,
         birthYear: null,
