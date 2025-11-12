@@ -6,7 +6,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -15,9 +14,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { apiKeyUtils } from "@/utils/api-key";
 import { aiModeUtils } from "@/utils/ai-mode";
 import { AIMode, AIModeValue, DEFAULT_AI_MODE } from "@/types/ai-mode";
+import { useAuth } from "@/contexts/auth-context";
+import { useRouter } from "next/router";
 
 interface SettingsModalProps {
   isOpen: boolean;
@@ -25,31 +25,31 @@ interface SettingsModalProps {
 }
 
 export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
-  const [apiKey, setApiKey] = useState("");
   const [aiMode, setAiMode] = useState<AIModeValue>(DEFAULT_AI_MODE);
+  const { logout } = useAuth();
+  const router = useRouter();
 
   useEffect(() => {
     if (isOpen) {
-      const savedApiKey = apiKeyUtils.get();
-      setApiKey(savedApiKey || "");
       const savedAiMode = aiModeUtils.get();
       setAiMode(savedAiMode);
     }
   }, [isOpen]);
 
   const handleSave = () => {
-    if (apiKey.trim()) {
-      apiKeyUtils.set(apiKey.trim());
-    }
     aiModeUtils.set(aiMode);
     onClose();
   };
 
   const handleReset = () => {
-    setApiKey("");
-    apiKeyUtils.remove();
     setAiMode(DEFAULT_AI_MODE);
     aiModeUtils.remove();
+  };
+
+  const handleLogout = () => {
+    logout();
+    onClose();
+    router.push("/");
   };
 
   return (
@@ -60,16 +60,6 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
         </DialogHeader>
         <form className="space-y-6">
           <div className="grid grid-cols-1 gap-6">
-            <div className="space-y-2">
-              <Label htmlFor="api-key">API 키</Label>
-              <Input
-                id="api-key"
-                type="password"
-                placeholder="API 키를 입력하세요"
-                value={apiKey}
-                onChange={(e) => setApiKey(e.target.value)}
-              />
-            </div>
             <div className="space-y-2">
               <Label htmlFor="ai-mode">AI 검색 모드</Label>
               <Select
@@ -90,9 +80,18 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
             </div>
           </div>
           <div className="flex justify-between gap-2 pt-6">
-            <Button type="button" variant="outline" onClick={handleReset}>
-              초기화
-            </Button>
+            <div className="flex gap-2">
+              <Button type="button" variant="outline" onClick={handleReset}>
+                초기화
+              </Button>
+              <Button
+                type="button"
+                variant="destructive"
+                onClick={handleLogout}
+              >
+                로그아웃
+              </Button>
+            </div>
             <div className="flex gap-2">
               <Button type="button" variant="ghost" onClick={onClose}>
                 취소
