@@ -9,8 +9,8 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
     <SidebarProvider>
       <AppSidebar />
       <SidebarInset>
-        <header className="flex shrink-0 items-center gap-2 border-b px-4 py-2">
-          <SidebarTrigger className="-ml-1 h-6 w-6" />
+        <header className="flex shrink-0 items-center gap-2 border-b px-4 py-3">
+          <SidebarTrigger className="-ml-1" />
           <Separator
             orientation="vertical"
             className="mr-2 data-[orientation=vertical]:h-4"
