@@ -3,7 +3,9 @@ import { authUtils } from "@/utils/auth";
 
 interface AuthContextType {
   basicAuthHeader: string | null;
+  userName: string | null;
   setBasicAuthHeader: (header: string) => void;
+  setUserName: (name: string) => void;
   logout: () => void;
   isAuthenticated: boolean;
 }
@@ -14,13 +16,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [basicAuthHeader, setBasicAuthHeaderState] = useState<string | null>(
     null,
   );
+  const [userName, setUserNameState] = useState<string | null>(null);
   const [isInitialized, setIsInitialized] = useState(false);
 
   // 초기 로드 시 세션 스토리지에서 인증 정보 복원
   useEffect(() => {
     const storedHeader = authUtils.get();
+    const storedUserName = authUtils.getUserName();
     if (storedHeader) {
       setBasicAuthHeaderState(storedHeader);
+    }
+    if (storedUserName) {
+      setUserNameState(storedUserName);
     }
     setIsInitialized(true);
   }, []);
@@ -30,9 +37,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     authUtils.set(header);
   };
 
+  const setUserName = (name: string) => {
+    setUserNameState(name);
+    authUtils.setUserName(name);
+  };
+
   const logout = () => {
     setBasicAuthHeaderState(null);
+    setUserNameState(null);
     authUtils.remove();
+    authUtils.removeUserName();
   };
 
   const isAuthenticated = basicAuthHeader !== null;
@@ -46,7 +60,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     <AuthContext.Provider
       value={{
         basicAuthHeader,
+        userName,
         setBasicAuthHeader,
+        setUserName,
         logout,
         isAuthenticated,
       }}

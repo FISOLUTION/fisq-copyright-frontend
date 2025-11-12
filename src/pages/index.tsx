@@ -19,7 +19,7 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
-  const { setBasicAuthHeader, isAuthenticated } = useAuth();
+  const { setBasicAuthHeader, setUserName, isAuthenticated } = useAuth();
 
   // 이미 인증된 사용자는 홈으로 리다이렉트
   useEffect(() => {
@@ -48,8 +48,13 @@ export default function LoginPage() {
       });
 
       if (response.ok) {
-        // 인증 성공 - 컨텍스트에 저장하고 홈으로 이동
+        // 인증 성공 - 응답에서 사용자 이름 추출
+        const data = await response.json();
+        const name = data.name || username; // name이 없으면 username 사용
+
+        // 컨텍스트에 저장하고 홈으로 이동
         setBasicAuthHeader(authHeader);
+        setUserName(name);
         router.push("/home");
       } else {
         setError("아이디 또는 비밀번호가 올바르지 않습니다.");
