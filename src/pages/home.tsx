@@ -18,7 +18,7 @@ export default function Home() {
       <AppLayout>
         <Card className="max-w-3xl">
           <CardHeader>
-            <CardTitle className="text-2xl">저작권 정보 검색</CardTitle>
+            <CardTitle className="text-2xl">대시보드</CardTitle>
             <CardDescription>
               연속간행물 또는 단행본의 저작권 정보를 검색할 수 있습니다.
             </CardDescription>
