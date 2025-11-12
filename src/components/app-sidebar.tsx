@@ -4,16 +4,14 @@ import * as React from "react"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import Image from "next/image"
-import { BookOpen, FileText, Home } from "lucide-react"
+import { FileSearch } from "lucide-react"
 
+import { NavMain } from "@/components/nav-main"
 import { NavUser } from "@/components/nav-user"
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
@@ -21,31 +19,30 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar"
 
-// 네비게이션 데이터
-const data = {
-  navHome: [
-    {
-      title: "대시보드",
-      url: "/home",
-      icon: Home,
-    },
-  ],
-  navSearch: [
-    {
-      title: "연속간행물",
-      url: "/serial",
-      icon: BookOpen,
-    },
-    {
-      title: "단행본",
-      url: "/monograph",
-      icon: FileText,
-    },
-  ],
-}
-
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const router = useRouter()
+
+  // 네비게이션 데이터
+  const navMain = [
+    {
+      title: "저작권 조사",
+      url: "#",
+      icon: FileSearch,
+      isActive: true,
+      items: [
+        {
+          title: "연속간행물",
+          url: "/serial",
+          isActive: router.pathname === "/serial",
+        },
+        {
+          title: "단행본",
+          url: "/monograph",
+          isActive: router.pathname === "/monograph",
+        },
+      ],
+    },
+  ]
 
   return (
     <Sidebar collapsible="icon" {...props}>
@@ -74,40 +71,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupLabel>홈</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {data.navHome.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild isActive={router.pathname === item.url} tooltip={item.title}>
-                    <Link href={item.url}>
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-        <SidebarGroup>
-          <SidebarGroupLabel>저작권 정보 검색</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {data.navSearch.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild isActive={router.pathname === item.url} tooltip={item.title}>
-                    <Link href={item.url}>
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+        <NavMain items={navMain} />
       </SidebarContent>
       <SidebarFooter>
         <NavUser />
