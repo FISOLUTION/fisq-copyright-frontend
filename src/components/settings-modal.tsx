@@ -16,8 +16,6 @@ import {
 } from "@/components/ui/select";
 import { aiModeUtils } from "@/utils/ai-mode";
 import { AIMode, AIModeValue, DEFAULT_AI_MODE } from "@/types/ai-mode";
-import { useAuth } from "@/contexts/auth-context";
-import { useRouter } from "next/router";
 
 interface SettingsModalProps {
   isOpen: boolean;
@@ -26,8 +24,6 @@ interface SettingsModalProps {
 
 export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   const [aiMode, setAiMode] = useState<AIModeValue>(DEFAULT_AI_MODE);
-  const { logout } = useAuth();
-  const router = useRouter();
 
   useEffect(() => {
     if (isOpen) {
@@ -44,12 +40,6 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   const handleReset = () => {
     setAiMode(DEFAULT_AI_MODE);
     aiModeUtils.remove();
-  };
-
-  const handleLogout = () => {
-    logout();
-    onClose();
-    router.push("/");
   };
 
   return (
@@ -80,18 +70,9 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
             </div>
           </div>
           <div className="flex justify-between gap-2 pt-6">
-            <div className="flex gap-2">
-              <Button type="button" variant="outline" onClick={handleReset}>
-                초기화
-              </Button>
-              <Button
-                type="button"
-                variant="destructive"
-                onClick={handleLogout}
-              >
-                로그아웃
-              </Button>
-            </div>
+            <Button type="button" variant="outline" onClick={handleReset}>
+              초기화
+            </Button>
             <div className="flex gap-2">
               <Button type="button" variant="ghost" onClick={onClose}>
                 취소
