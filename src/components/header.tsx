@@ -23,7 +23,7 @@ export default function Header() {
         variant="ghost"
         size="icon"
         onClick={() => setIsSettingsOpen(true)}
-        className="h-8 w-8"
+        className="h-7 w-7"
       >
         <Settings className="h-4 w-4" />
       </Button>
