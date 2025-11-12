@@ -4,7 +4,7 @@ import * as React from "react"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import Image from "next/image"
-import { FileSearch, Home } from "lucide-react"
+import { FileSearch, LayoutDashboard } from "lucide-react"
 
 import { NavMain } from "@/components/nav-main"
 import { NavUser } from "@/components/nav-user"
@@ -81,7 +81,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               <SidebarMenuItem>
                 <SidebarMenuButton asChild isActive={router.pathname === "/home"} tooltip="대시보드">
                   <Link href="/home">
-                    <Home />
+                    <LayoutDashboard />
                     <span>대시보드</span>
                   </Link>
                 </SidebarMenuButton>
