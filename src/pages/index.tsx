@@ -50,11 +50,12 @@ export default function LoginPage() {
       if (response.ok) {
         // 인증 성공 - 응답에서 사용자 이름 추출
         const data = await response.json();
-        const name = data.name || username; // name이 없으면 username 사용
 
         // 컨텍스트에 저장하고 홈으로 이동
         setBasicAuthHeader(authHeader);
-        setUserName(name);
+        if (data.name) {
+          setUserName(data.name);
+        }
         setUsernameContext(username);
         router.push("/home");
       } else {
