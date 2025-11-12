@@ -8,7 +8,6 @@ import {
 } from "@/components/ui/card";
 import { toast } from "sonner";
 import { SerialPublication } from "@/types/publication";
-import Header from "@/components/header";
 import LoadingOverlay from "@/components/search/loading-overlay";
 import ActionToolbar from "@/components/search/action-toolbar";
 import BookSearchTable, {
@@ -21,6 +20,7 @@ import { searchSerialItemApi } from "@/lib/api";
 import { excel } from "@/lib/excel";
 import { AuthGuard } from "@/components/auth-guard";
 import { useAuth } from "@/contexts/auth-context";
+import { AppLayout } from "@/components/layout";
 
 const initialData: SerialPublication[] = [
   {
@@ -301,17 +301,13 @@ export default function Home() {
 
   return (
     <AuthGuard>
-      <div className="bg-background relative min-h-screen">
+      <AppLayout>
         <LoadingOverlay
           isLoading={isSearching}
           message="메타정보를 검색하는 중..."
           progress={searchProgress.total > 0 ? searchProgress : undefined}
         />
 
-        <Header />
-
-      {/* 메인 컨텐츠 */}
-      <main className="container mx-auto px-6 py-8">
         <Card>
           <CardHeader>
             <div className="flex items-center justify-between">
@@ -350,8 +346,7 @@ export default function Home() {
             />
           </CardContent>
         </Card>
-      </main>
-    </div>
+      </AppLayout>
     </AuthGuard>
   );
 }
