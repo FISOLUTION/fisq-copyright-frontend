@@ -54,13 +54,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
               <Link href="/home">
-                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+                <div className="flex aspect-square size-8 items-center justify-center rounded-lg">
                   <Image
                     src="/icon.png"
                     alt="FISQ"
                     width={32}
                     height={32}
-                    className="size-4"
+                    className="size-7"
                     priority
                   />
                 </div>
