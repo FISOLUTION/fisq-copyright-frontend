@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { authUtils } from "@/utils/auth";
 
 interface AuthContextType {
   basicAuthHeader: string | null;
@@ -13,16 +14,33 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [basicAuthHeader, setBasicAuthHeaderState] = useState<string | null>(
     null,
   );
+  const [isInitialized, setIsInitialized] = useState(false);
+
+  // 초기 로드 시 세션 스토리지에서 인증 정보 복원
+  useEffect(() => {
+    const storedHeader = authUtils.get();
+    if (storedHeader) {
+      setBasicAuthHeaderState(storedHeader);
+    }
+    setIsInitialized(true);
+  }, []);
 
   const setBasicAuthHeader = (header: string) => {
     setBasicAuthHeaderState(header);
+    authUtils.set(header);
   };
 
   const logout = () => {
     setBasicAuthHeaderState(null);
+    authUtils.remove();
   };
 
   const isAuthenticated = basicAuthHeader !== null;
+
+  // 초기화되기 전에는 children을 렌더링하지 않음 (깜빡임 방지)
+  if (!isInitialized) {
+    return null;
+  }
 
   return (
     <AuthContext.Provider
