@@ -46,13 +46,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar {...props}>
       <SidebarHeader>
-        <Link href="/home" className="flex items-center px-2 py-2">
+        <Link href="/home" className="flex items-center px-2">
           <Image
             src="/logo.png"
             alt="FISQ Logo"
-            width={120}
-            height={30}
-            className="h-8 w-auto"
+            width={100}
+            height={25}
+            className="h-6 w-auto"
             priority
           />
         </Link>
