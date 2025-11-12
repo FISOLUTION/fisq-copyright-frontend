@@ -4,8 +4,10 @@ import { authUtils } from "@/utils/auth";
 interface AuthContextType {
   basicAuthHeader: string | null;
   userName: string | null;
+  username: string | null;
   setBasicAuthHeader: (header: string) => void;
   setUserName: (name: string) => void;
+  setUsername: (username: string) => void;
   logout: () => void;
   isAuthenticated: boolean;
 }
@@ -17,17 +19,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     null,
   );
   const [userName, setUserNameState] = useState<string | null>(null);
+  const [username, setUsernameState] = useState<string | null>(null);
   const [isInitialized, setIsInitialized] = useState(false);
 
   // 초기 로드 시 세션 스토리지에서 인증 정보 복원
   useEffect(() => {
     const storedHeader = authUtils.get();
     const storedUserName = authUtils.getUserName();
+    const storedUsername = authUtils.getUsername();
     if (storedHeader) {
       setBasicAuthHeaderState(storedHeader);
     }
     if (storedUserName) {
       setUserNameState(storedUserName);
+    }
+    if (storedUsername) {
+      setUsernameState(storedUsername);
     }
     setIsInitialized(true);
   }, []);
@@ -42,11 +49,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     authUtils.setUserName(name);
   };
 
+  const setUsername = (username: string) => {
+    setUsernameState(username);
+    authUtils.setUsername(username);
+  };
+
   const logout = () => {
     setBasicAuthHeaderState(null);
     setUserNameState(null);
+    setUsernameState(null);
     authUtils.remove();
     authUtils.removeUserName();
+    authUtils.removeUsername();
   };
 
   const isAuthenticated = basicAuthHeader !== null;
@@ -61,8 +75,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       value={{
         basicAuthHeader,
         userName,
+        username,
         setBasicAuthHeader,
         setUserName,
+        setUsername,
         logout,
         isAuthenticated,
       }}

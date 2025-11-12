@@ -35,4 +35,22 @@ export const authUtils = {
     if (typeof window === "undefined") return;
     sessionStorage.removeItem("user-name");
   },
+
+  // 세션 스토리지에서 사용자 ID 조회
+  getUsername: (): string | null => {
+    if (typeof window === "undefined") return null;
+    return sessionStorage.getItem("username");
+  },
+
+  // 세션 스토리지에 사용자 ID 저장
+  setUsername: (username: string): void => {
+    if (typeof window === "undefined") return;
+    sessionStorage.setItem("username", username);
+  },
+
+  // 세션 스토리지에서 사용자 ID 제거
+  removeUsername: (): void => {
+    if (typeof window === "undefined") return;
+    sessionStorage.removeItem("username");
+  },
 };
