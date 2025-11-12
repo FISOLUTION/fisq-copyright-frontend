@@ -18,8 +18,9 @@ import BookSearchTable, {
 } from "@/components/search/book-search-table";
 import { FormField } from "@/components/search/single-add-dialog";
 import { searchMonographItemApi } from "@/lib/api";
-import { ApiKeyNotConfiguredError } from "@/lib/errors";
 import { excel } from "@/lib/excel";
+import { AuthGuard } from "@/components/auth-guard";
+import { useAuth } from "@/contexts/auth-context";
 
 const initialData: MonographPublication[] = [
   {
@@ -75,6 +76,7 @@ const formFields: FormField[] = [
 ];
 
 export default function Monograph() {
+  const { basicAuthHeader } = useAuth();
   const [data, setData] = useState<MonographPublication[]>(initialData);
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [isSearching, setIsSearching] = useState(false);
@@ -135,6 +137,7 @@ export default function Monograph() {
               additionalInfo: item.additionalInfo,
             },
             index,
+            basicAuthHeader!,
           );
 
           // 성공한 경우 데이터 업데이트
@@ -153,10 +156,6 @@ export default function Monograph() {
           };
           successCount++;
         } catch (error) {
-          // API 키 에러는 상위로 전파
-          if (error instanceof ApiKeyNotConfiguredError) {
-            throw error;
-          }
           console.error(`Search failed for item ${index}:`, error);
           failedIndices.push(index);
           // 실패한 경우 저작권 여부는 null로 표시, 권리자 불명 여부는 알 수 없음(null)
@@ -195,24 +194,6 @@ export default function Monograph() {
       }
     } catch (error) {
       console.error("Search error:", error);
-
-      // API 키가 설정되지 않은 경우
-      if (error instanceof ApiKeyNotConfiguredError) {
-        toast.error("API 키가 설정되지 않았습니다", {
-          description:
-            "우측 상단의 설정 버튼을 클릭하여 API 키를 설정해주세요.",
-          action: {
-            label: "설정",
-            onClick: () => {
-              const event = new CustomEvent("openSettings");
-              window.dispatchEvent(event);
-            },
-          },
-        });
-        return;
-      }
-
-      // 기타 오류
       toast.error("메타정보 검색 중 오류가 발생했습니다.");
     } finally {
       setIsSearching(false);
@@ -315,14 +296,15 @@ export default function Monograph() {
   };
 
   return (
-    <div className="bg-background relative min-h-screen">
-      <LoadingOverlay
-        isLoading={isSearching}
-        message="메타정보를 검색하는 중..."
-        progress={searchProgress.total > 0 ? searchProgress : undefined}
-      />
+    <AuthGuard>
+      <div className="bg-background relative min-h-screen">
+        <LoadingOverlay
+          isLoading={isSearching}
+          message="메타정보를 검색하는 중..."
+          progress={searchProgress.total > 0 ? searchProgress : undefined}
+        />
 
-      <Header />
+        <Header />
 
       {/* 메인 컨텐츠 */}
       <main className="container mx-auto px-6 py-8">
@@ -364,5 +346,6 @@ export default function Monograph() {
         </Card>
       </main>
     </div>
+    </AuthGuard>
   );
 }

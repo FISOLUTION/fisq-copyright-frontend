@@ -3,30 +3,23 @@ import {
   MonographRequestItem,
   SerialRequestItem,
 } from "@/types/dtos/book-search";
-import { apiKeyUtils } from "@/utils/api-key";
 import { aiModeUtils } from "@/utils/ai-mode";
-import { ApiKeyNotConfiguredError } from "./errors";
 
 export async function searchSerialItemApi(
   url: string,
   item: SerialRequestItem,
   index: number,
+  basicAuthHeader: string,
 ): Promise<BookSearchResponseItem & { index: number }> {
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
   const aiMode = aiModeUtils.get();
   const fullUrl = `${baseUrl}${url}?mode=${aiMode}`;
 
-  const apiKey = apiKeyUtils.get();
-
-  if (!apiKey) {
-    throw new ApiKeyNotConfiguredError();
-  }
-
   const res = await fetch(fullUrl, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "X-Api-Key": apiKey,
+      Authorization: basicAuthHeader,
     },
     body: JSON.stringify(item),
   });
@@ -44,22 +37,17 @@ export async function searchMonographItemApi(
   url: string,
   item: MonographRequestItem,
   index: number,
+  basicAuthHeader: string,
 ): Promise<BookSearchResponseItem & { index: number }> {
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
   const aiMode = aiModeUtils.get();
   const fullUrl = `${baseUrl}${url}?mode=${aiMode}`;
 
-  const apiKey = apiKeyUtils.get();
-
-  if (!apiKey) {
-    throw new ApiKeyNotConfiguredError();
-  }
-
   const res = await fetch(fullUrl, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "X-Api-Key": apiKey,
+      Authorization: basicAuthHeader,
     },
     body: JSON.stringify(item),
   });
