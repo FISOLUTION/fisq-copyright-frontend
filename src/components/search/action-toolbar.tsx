@@ -81,29 +81,29 @@ export default function ActionToolbar({
         </Select>
 
         <ButtonGroup>
-          <Button size="sm" onClick={() => setSingleAddOpen(true)}>
+          <Button size="sm" variant="outline" onClick={() => setSingleAddOpen(true)}>
             <Plus className="mr-2 h-4 w-4" />
             단건 추가하기
           </Button>
 
-          <Button size="sm" onClick={() => setExcelUploadOpen(true)}>
+          <Button size="sm" variant="outline" onClick={() => setExcelUploadOpen(true)}>
             <Upload className="mr-2 h-4 w-4" />
             엑셀 업로드
           </Button>
         </ButtonGroup>
 
         <ButtonGroup>
-          <Button size="sm" onClick={onSearch} disabled={isSearching}>
+          <Button size="sm" variant="outline" onClick={onSearch} disabled={isSearching}>
             <Search className="mr-2 h-4 w-4" />
             검색하기
           </Button>
 
-          <Button size="sm" onClick={onExcelDownload}>
+          <Button size="sm" variant="outline" onClick={onExcelDownload}>
             <Download className="mr-2 h-4 w-4" />
             엑셀 다운로드
           </Button>
 
-          <Button size="sm" onClick={onReset}>
+          <Button size="sm" variant="outline" onClick={onReset}>
             <RotateCcw className="mr-2 h-4 w-4" />
             초기화
           </Button>
@@ -112,6 +112,7 @@ export default function ActionToolbar({
         <ButtonGroup>
           <Button
             size="sm"
+            variant="destructive"
             onClick={onRemoveSelected}
             disabled={selectedItemsCount === 0}
           >
