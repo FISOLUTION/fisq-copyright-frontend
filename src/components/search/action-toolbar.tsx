@@ -80,6 +80,11 @@ export default function ActionToolbar({
           </SelectContent>
         </Select>
 
+        <Button size="sm" variant="outline" onClick={onSearch} disabled={isSearching}>
+          <Search className="mr-2 h-4 w-4" />
+          검색하기
+        </Button>
+
         <ButtonGroup>
           <Button size="sm" variant="outline" onClick={() => setSingleAddOpen(true)}>
             <Plus className="mr-2 h-4 w-4" />
@@ -89,13 +94,6 @@ export default function ActionToolbar({
           <Button size="sm" variant="outline" onClick={() => setExcelUploadOpen(true)}>
             <Upload className="mr-2 h-4 w-4" />
             엑셀 업로드
-          </Button>
-        </ButtonGroup>
-
-        <ButtonGroup>
-          <Button size="sm" variant="outline" onClick={onSearch} disabled={isSearching}>
-            <Search className="mr-2 h-4 w-4" />
-            검색하기
           </Button>
         </ButtonGroup>
 
