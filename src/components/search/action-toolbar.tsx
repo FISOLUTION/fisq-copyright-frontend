@@ -66,9 +66,9 @@ export default function ActionToolbar({
 
   return (
     <>
-      <div className="flex flex-wrap items-center gap-2">
+      <ButtonGroup className="flex-wrap !items-center">
         <Select value={aiMode} onValueChange={handleAiModeChange}>
-          <SelectTrigger className="h-9 w-[150px]">
+          <SelectTrigger size="sm" className="w-[150px]">
             <SelectValue placeholder="AI 모드 선택" />
           </SelectTrigger>
           <SelectContent>
@@ -81,47 +81,45 @@ export default function ActionToolbar({
         </Select>
 
         <ButtonGroup>
-          <ButtonGroup>
-            <Button size="sm" onClick={() => setSingleAddOpen(true)}>
-              <Plus className="mr-2 h-4 w-4" />
-              단건 추가하기
-            </Button>
+          <Button size="sm" onClick={() => setSingleAddOpen(true)}>
+            <Plus className="mr-2 h-4 w-4" />
+            단건 추가하기
+          </Button>
 
-            <Button size="sm" onClick={() => setExcelUploadOpen(true)}>
-              <Upload className="mr-2 h-4 w-4" />
-              엑셀 업로드
-            </Button>
-          </ButtonGroup>
-
-          <ButtonGroup>
-            <Button size="sm" onClick={onSearch} disabled={isSearching}>
-              <Search className="mr-2 h-4 w-4" />
-              검색하기
-            </Button>
-
-            <Button size="sm" onClick={onExcelDownload}>
-              <Download className="mr-2 h-4 w-4" />
-              엑셀 다운로드
-            </Button>
-
-            <Button size="sm" onClick={onReset}>
-              <RotateCcw className="mr-2 h-4 w-4" />
-              초기화
-            </Button>
-          </ButtonGroup>
-
-          <ButtonGroup>
-            <Button
-              size="sm"
-              onClick={onRemoveSelected}
-              disabled={selectedItemsCount === 0}
-            >
-              <X className="mr-2 h-4 w-4" />
-              선택 제거
-            </Button>
-          </ButtonGroup>
+          <Button size="sm" onClick={() => setExcelUploadOpen(true)}>
+            <Upload className="mr-2 h-4 w-4" />
+            엑셀 업로드
+          </Button>
         </ButtonGroup>
-      </div>
+
+        <ButtonGroup>
+          <Button size="sm" onClick={onSearch} disabled={isSearching}>
+            <Search className="mr-2 h-4 w-4" />
+            검색하기
+          </Button>
+
+          <Button size="sm" onClick={onExcelDownload}>
+            <Download className="mr-2 h-4 w-4" />
+            엑셀 다운로드
+          </Button>
+
+          <Button size="sm" onClick={onReset}>
+            <RotateCcw className="mr-2 h-4 w-4" />
+            초기화
+          </Button>
+        </ButtonGroup>
+
+        <ButtonGroup>
+          <Button
+            size="sm"
+            onClick={onRemoveSelected}
+            disabled={selectedItemsCount === 0}
+          >
+            <X className="mr-2 h-4 w-4" />
+            선택 제거
+          </Button>
+        </ButtonGroup>
+      </ButtonGroup>
 
       <SingleAddDialog
         open={singleAddOpen}
