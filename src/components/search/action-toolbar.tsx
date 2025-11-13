@@ -97,7 +97,9 @@ export default function ActionToolbar({
             <Search className="mr-2 h-4 w-4" />
             검색하기
           </Button>
+        </ButtonGroup>
 
+        <ButtonGroup>
           <Button size="sm" variant="outline" onClick={onExcelDownload}>
             <Download className="mr-2 h-4 w-4" />
             엑셀 다운로드
