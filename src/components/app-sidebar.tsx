@@ -3,7 +3,6 @@
 import * as React from "react"
 import Link from "next/link"
 import { useRouter } from "next/router"
-import Image from "next/image"
 import { FileSearch, LayoutDashboard } from "lucide-react"
 
 import { NavMain } from "@/components/nav-main"
@@ -11,7 +10,6 @@ import { NavUser } from "@/components/nav-user"
 import {
   Sidebar,
   SidebarContent,
-  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
@@ -50,28 +48,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton size="lg" asChild>
-              <Link href="/home">
-                <div className="flex aspect-square size-8 items-center justify-center rounded-lg">
-                  <Image
-                    src="/icon.png"
-                    alt="FISQ"
-                    width={32}
-                    height={32}
-                    className="size-7"
-                    priority
-                  />
-                </div>
-                <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">FISQ</span>
-                  <span className="truncate text-xs">저작권 정보 검색</span>
-                </div>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
+        <NavUser />
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
@@ -91,9 +68,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarGroup>
         <NavMain items={navMain} />
       </SidebarContent>
-      <SidebarFooter>
-        <NavUser />
-      </SidebarFooter>
       <SidebarRail />
     </Sidebar>
   )
