@@ -68,7 +68,7 @@ export default function BookSearchTable<T extends BookSearchData>({
           <TableRow className="hover:bg-transparent">
             <TableHead
               rowSpan={2}
-              className="hover:bg-muted/50 relative cursor-pointer border-r transition-colors"
+              className="w-12 hover:bg-muted/50 relative cursor-pointer border-r transition-colors"
             >
               <div className="flex h-full w-full items-center justify-center px-2">
                 <Checkbox checked={allSelected} onCheckedChange={onSelectAll} />
