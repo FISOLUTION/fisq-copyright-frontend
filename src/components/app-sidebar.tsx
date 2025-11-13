@@ -1,72 +1,81 @@
-"use client"
-
 import * as React from "react"
 import Link from "next/link"
 import { useRouter } from "next/router"
-import { FileSearch, LayoutDashboard } from "lucide-react"
 
-import { NavMain } from "@/components/nav-main"
 import { NavUser } from "@/components/nav-user"
 import {
   Sidebar,
   SidebarContent,
   SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
   SidebarRail,
 } from "@/components/ui/sidebar"
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const router = useRouter()
-
-  // 네비게이션 데이터
-  const navMain = [
+// 네비게이션 데이터
+const data = {
+  navMain: [
+    {
+      title: "대시보드",
+      url: "/home",
+    },
     {
       title: "저작권 조사",
       url: "#",
-      icon: FileSearch,
-      isActive: true,
       items: [
         {
           title: "연속간행물",
           url: "/serial",
-          isActive: router.pathname === "/serial",
         },
         {
           title: "단행본",
           url: "/monograph",
-          isActive: router.pathname === "/monograph",
         },
       ],
     },
-  ]
+  ],
+}
+
+export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const router = useRouter()
 
   return (
-    <Sidebar collapsible="icon" {...props}>
-      <SidebarHeader>
+    <Sidebar {...props}>
+      <SidebarHeader className="border-sidebar-border h-16 border-b">
         <NavUser />
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>홈</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild isActive={router.pathname === "/home"} tooltip="대시보드">
-                  <Link href="/home">
-                    <LayoutDashboard />
-                    <span>대시보드</span>
+          <SidebarMenu>
+            {data.navMain.map((item) => (
+              <SidebarMenuItem key={item.title}>
+                <SidebarMenuButton asChild isActive={router.pathname === item.url}>
+                  <Link href={item.url}>
+                    <span>{item.title}</span>
                   </Link>
                 </SidebarMenuButton>
+                {item.items?.length ? (
+                  <SidebarMenuSub>
+                    {item.items.map((subItem) => (
+                      <SidebarMenuSubItem key={subItem.title}>
+                        <SidebarMenuSubButton asChild isActive={router.pathname === subItem.url}>
+                          <Link href={subItem.url}>
+                            <span>{subItem.title}</span>
+                          </Link>
+                        </SidebarMenuSubButton>
+                      </SidebarMenuSubItem>
+                    ))}
+                  </SidebarMenuSub>
+                ) : null}
               </SidebarMenuItem>
-            </SidebarMenu>
-          </SidebarGroupContent>
+            ))}
+          </SidebarMenu>
         </SidebarGroup>
-        <NavMain items={navMain} />
       </SidebarContent>
       <SidebarRail />
     </Sidebar>
