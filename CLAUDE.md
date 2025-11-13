@@ -6,6 +6,13 @@
 - **린트**: `pnpm lint`
 - **shadcn 컴포넌트 추가**: `pnpm dlx shadcn@latest add <component-name>`
 
+## 로컬 개발 환경
+
+- **로그인 기본 계정**:
+    - ID: `admin`
+    - PW: `admin1234`
+    - Chrome DevTools MCP 등을 사용하여 로그인 API에 접근할 때 사용
+
 ## 아키텍처 및 구조
 
 - TypeScript + Next.js 15 Pages Router + Tailwind CSS 4 + shadcn/ui
