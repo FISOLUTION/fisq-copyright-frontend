@@ -1,9 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Download, Plus, RotateCcw, Search, Upload, X } from "lucide-react";
 import SingleAddDialog, { FormField } from "./single-add-dialog";
 import ExcelUploadDialog from "./excel-upload-dialog";
 import { BasicColumn } from "./book-search-table";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
+import { aiModeUtils } from "@/utils/ai-mode";
+import { AIMode, AIModeValue, DEFAULT_AI_MODE } from "@/types/ai-mode";
 
 interface ActionToolbarProps {
   onSingleAdd: (formData: FormData) => void;
@@ -32,6 +42,17 @@ export default function ActionToolbar({
 }: ActionToolbarProps) {
   const [singleAddOpen, setSingleAddOpen] = useState(false);
   const [excelUploadOpen, setExcelUploadOpen] = useState(false);
+  const [aiMode, setAiMode] = useState<AIModeValue>(DEFAULT_AI_MODE);
+
+  useEffect(() => {
+    const savedAiMode = aiModeUtils.get();
+    setAiMode(savedAiMode);
+  }, []);
+
+  const handleAiModeChange = (value: AIModeValue) => {
+    setAiMode(value);
+    aiModeUtils.set(value);
+  };
 
   const handleSingleAdd = (formData: FormData) => {
     onSingleAdd(formData);
@@ -45,7 +66,25 @@ export default function ActionToolbar({
 
   return (
     <>
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap items-center gap-2">
+        <Select value={aiMode} onValueChange={handleAiModeChange}>
+          <SelectTrigger className="h-9 w-[150px]">
+            <SelectValue placeholder="AI 모드 선택" />
+          </SelectTrigger>
+          <SelectContent>
+            {Object.values(AIMode).map((mode) => (
+              <SelectItem key={mode.value} value={mode.value}>
+                {mode.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
+        <Separator
+          orientation="vertical"
+          className="mx-2 data-[orientation=vertical]:h-6"
+        />
+
         <Button size="sm" onClick={() => setSingleAddOpen(true)}>
           <Plus className="mr-2 h-4 w-4" />
           단건 추가하기
