@@ -61,7 +61,6 @@ const metaColumns: MetaColumn[] = [
   { key: "isni", label: "ISNI", width: "w-40" },
   { key: "lastAffiliation", label: "거소 및 단체정보", width: "w-32" },
   { key: "remark", label: "비고", width: "w-40" },
-  { key: "webSearchUtilized", label: "웹 활용 여부", width: "w-24" },
 ];
 
 const copyrightColumns: CopyrightColumn[] = [
