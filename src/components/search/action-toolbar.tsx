@@ -12,7 +12,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Separator } from "@/components/ui/separator";
 import { aiModeUtils } from "@/utils/ai-mode";
 import { AIMode, AIModeValue, DEFAULT_AI_MODE } from "@/types/ai-mode";
 
@@ -80,11 +79,6 @@ export default function ActionToolbar({
             ))}
           </SelectContent>
         </Select>
-
-        <Separator
-          orientation="vertical"
-          className="mx-2 data-[orientation=vertical]:h-6"
-        />
 
         <ButtonGroup>
           <ButtonGroup>
