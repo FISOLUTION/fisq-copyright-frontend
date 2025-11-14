@@ -19,6 +19,7 @@
 - 전체 코드베이스는 TypeScript로 작성
 - **페이지**:
     - `/` - 각 검색 페이지로 이동 가능한 랜딩 페이지
+    - `/dashboard` - 대시보드 페이지
     - `/serial` - 연속간행물 검색
     - `/monograph` - 단행본 검색
 
@@ -38,10 +39,10 @@
 - **shadcn/ui 컴포넌트**: `src/components/ui/**`
 - **도서 검색 컴포넌트**: `src/components/search/**`
     - `BookSearchTable` - 도서 테이블 컴포넌트
-    - `ActionToolbar` - 검색, 업로드, 다운로드 버튼
+    - `ActionToolbar` - 검색, 업로드, 다운로드 버튼 및 AI 검색 모드 선택
     - `SingleAddDialog` - 수동 항목 추가
     - `ExcelUploadDialog` - Excel 파일 처리
-- **그 외**: header, settings-modal 등 
+- **레이아웃 컴포넌트**: `Layout`, `AppSidebar` 
 
 ### 타입
 
