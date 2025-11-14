@@ -67,23 +67,25 @@ export default function ActionToolbar({
   return (
     <>
       <ButtonGroup className="flex-wrap !items-center">
-        <Select value={aiMode} onValueChange={handleAiModeChange}>
-          <SelectTrigger size="sm" className="w-[150px]">
-            <SelectValue placeholder="AI 모드 선택" />
-          </SelectTrigger>
-          <SelectContent>
-            {Object.values(AIMode).map((mode) => (
-              <SelectItem key={mode.value} value={mode.value}>
-                {mode.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <ButtonGroup>
+          <Select value={aiMode} onValueChange={handleAiModeChange}>
+            <SelectTrigger size="sm" className="w-[100px]">
+              <SelectValue placeholder="AI 모드 선택" />
+            </SelectTrigger>
+            <SelectContent>
+              {Object.values(AIMode).map((mode) => (
+                <SelectItem key={mode.value} value={mode.value}>
+                  {mode.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
 
-        <Button size="sm" variant="outline" onClick={onSearch} disabled={isSearching}>
-          <Search className="mr-2 h-4 w-4" />
-          검색하기
-        </Button>
+          <Button size="sm" variant="outline" onClick={onSearch} disabled={isSearching}>
+            <Search className="mr-2 h-4 w-4" />
+            검색하기
+          </Button>
+        </ButtonGroup>
 
         <ButtonGroup>
           <Button size="sm" variant="outline" onClick={() => setSingleAddOpen(true)}>
@@ -93,7 +95,7 @@ export default function ActionToolbar({
 
           <Button size="sm" variant="outline" onClick={() => setExcelUploadOpen(true)}>
             <Upload className="mr-2 h-4 w-4" />
-            엑셀 업로드
+            다건 업로드
           </Button>
         </ButtonGroup>
 
