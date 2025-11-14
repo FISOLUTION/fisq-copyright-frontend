@@ -17,6 +17,14 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@/components/ui/empty";
 import { Upload } from "lucide-react";
 import * as XLSX from "xlsx";
 import { BasicColumn } from "./book-search-table";
@@ -135,30 +143,49 @@ export default function ExcelUploadDialog({
           </DialogDescription>
         </DialogHeader>
 
-        {/* 컨텐츠 영역을 flex로 관리 */}
-        <div className="flex min-h-0 flex-1 flex-col gap-4">
-          {/* 드롭존 - 고정 높이 */}
-          <div className="flex-shrink-0">
+        {/* 컨텐츠 영역 */}
+        <div className="flex min-h-0 flex-1 flex-col">
+          {currentData.length === 0 ? (
             <div
+              className="flex flex-1 cursor-pointer"
+              onDrop={handleDrop}
+              onDragOver={handleDragOver}
+              onDragEnter={handleDragEnter}
+              onClick={openFilePicker}
               role="button"
               tabIndex={0}
               onKeyDown={(e) =>
                 (e.key === "Enter" || e.key === " ") && openFilePicker()
               }
-              className="hover:bg-muted/50 cursor-pointer rounded-lg border border-dashed p-6 text-center transition-colors"
-              onDrop={handleDrop}
-              onDragOver={handleDragOver}
-              onDragEnter={handleDragEnter}
-              onClick={openFilePicker}
               aria-label="엑셀 파일 업로드"
             >
-              <Upload className="text-muted-foreground mx-auto mb-3 h-10 w-10" />
-              <p className="mb-1 text-sm">
-                엑셀 파일을 드래그하거나 클릭하여 업로드
-              </p>
-              <p className="text-muted-foreground text-xs">
-                *.xlsx, *.xls 파일만 지원
-              </p>
+              <Empty className="border border-dashed">
+                <EmptyHeader>
+                  <EmptyMedia variant="icon">
+                    <Upload />
+                  </EmptyMedia>
+                  <EmptyTitle>엑셀 파일 업로드</EmptyTitle>
+                  <EmptyDescription>
+                    엑셀 파일을 드래그하거나 클릭하여 업로드하세요.
+                  </EmptyDescription>
+                </EmptyHeader>
+                <EmptyContent>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openFilePicker();
+                    }}
+                  >
+                    파일 선택
+                  </Button>
+                  <p className="text-muted-foreground text-xs">
+                    *.xlsx, *.xls 파일만 지원
+                  </p>
+                </EmptyContent>
+              </Empty>
               <input
                 ref={fileInputRef}
                 type="file"
@@ -166,30 +193,17 @@ export default function ExcelUploadDialog({
                 accept=".xlsx,.xls"
                 onChange={handleFileUpload}
               />
-              <Button
-                variant="outline"
-                size="sm"
-                className="mt-3"
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  openFilePicker();
-                }}
-              >
-                파일 선택
-              </Button>
-              {fileName && (
-                <p className="text-muted-foreground mt-2 text-xs">{fileName}</p>
-              )}
             </div>
-          </div>
-
-          {/* 미리보기 테이블 - 남은 공간 사용 */}
-          <div className="flex min-h-0 flex-1 flex-col">
-            <h4 className="mb-2 flex-shrink-0 font-medium">
-              미리보기 ({rowCount}행)
-            </h4>
-            {currentData.length > 0 ? (
+          ) : (
+            <div className="flex min-h-0 flex-1 flex-col">
+              <h4 className="mb-2 flex-shrink-0 font-medium">
+                미리보기 ({rowCount}행)
+                {fileName && (
+                  <span className="text-muted-foreground ml-2 text-sm font-normal">
+                    {fileName}
+                  </span>
+                )}
+              </h4>
               <div className="flex-1 overflow-hidden rounded-md border">
                 <ScrollArea className="h-full w-full">
                   <Table>
@@ -224,14 +238,8 @@ export default function ExcelUploadDialog({
                   <ScrollBar orientation="vertical" />
                 </ScrollArea>
               </div>
-            ) : (
-              <div className="flex flex-1 items-center justify-center rounded-md border">
-                <p className="text-muted-foreground text-sm">
-                  엑셀 파일을 업로드하면 여기에 미리보기가 표시됩니다.
-                </p>
-              </div>
-            )}
-          </div>
+            </div>
+          )}
         </div>
 
         <DialogFooter className="flex-shrink-0">
