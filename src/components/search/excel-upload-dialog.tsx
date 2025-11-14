@@ -197,12 +197,7 @@ export default function ExcelUploadDialog({
           ) : (
             <div className="flex min-h-0 flex-1 flex-col">
               <h4 className="mb-2 flex-shrink-0 font-medium">
-                미리보기 ({rowCount}행)
-                {fileName && (
-                  <span className="text-muted-foreground ml-2 text-sm font-normal">
-                    {fileName}
-                  </span>
-                )}
+                {fileName} ({rowCount}행)
               </h4>
               <div className="flex-1 overflow-hidden rounded-md border">
                 <ScrollArea className="h-full w-full">
