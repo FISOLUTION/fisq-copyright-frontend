@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/empty"
 import { FlaskConical } from "lucide-react"
 
-export default function Home() {
+export default function Dashboard() {
   return (
     <AuthGuard>
       <AppLayout>
