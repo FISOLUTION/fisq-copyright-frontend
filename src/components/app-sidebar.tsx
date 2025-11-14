@@ -22,7 +22,7 @@ const data = {
   navMain: [
     {
       title: "대시보드",
-      url: "/home",
+      url: "/dashboard",
     },
     {
       title: "저작권 조사",

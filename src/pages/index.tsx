@@ -24,7 +24,7 @@ export default function LoginPage() {
   // 이미 인증된 사용자는 홈으로 리다이렉트
   useEffect(() => {
     if (isAuthenticated) {
-      router.push("/home");
+      router.push("/dashboard");
     }
   }, [isAuthenticated, router]);
 
@@ -57,7 +57,7 @@ export default function LoginPage() {
           setUserName(data.name);
         }
         setUsernameContext(username);
-        router.push("/home");
+        router.push("/dashboard");
       } else {
         setError("아이디 또는 비밀번호가 올바르지 않습니다.");
       }
