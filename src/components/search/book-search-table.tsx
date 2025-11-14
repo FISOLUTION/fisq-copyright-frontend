@@ -64,7 +64,7 @@ export default function BookSearchTable<T extends BookSearchData>({
   return (
     <div className="overflow-x-auto">
       <Table style={{ minWidth: "1400px" }}>
-        <TableHeader className="bg-background sticky top-0 z-10">
+        <TableHeader className="bg-background sticky top-0 z-[5]">
           <TableRow className="hover:bg-transparent">
             <TableHead
               rowSpan={2}
