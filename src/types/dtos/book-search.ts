@@ -14,7 +14,7 @@ export type MonographRequestItem = BaseSearchRequestItem;
 
 export interface CopyrightInfo {
   code: string;
-  has_copyright: boolean;
+  hasCopyright: boolean;
   reason: string;
 }
 

@@ -157,7 +157,7 @@ export default function Home() {
             remark: responseItem.remark,
             webSearchUtilized: responseItem.webSearchUtilized,
             isAuthorUnknown: responseItem.isAuthorUnknown,
-            hasCopyright: responseItem.copyrightInfo.has_copyright,
+            hasCopyright: responseItem.copyrightInfo.hasCopyright,
             copyrightReason: responseItem.copyrightInfo.reason,
           };
           successCount++;
