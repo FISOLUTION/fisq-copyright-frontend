@@ -40,6 +40,7 @@ const initialData: MonographPublication[] = [
     webSearchUtilized: null,
     isAuthorUnknown: null,
     hasCopyright: null,
+    copyrightReason: null,
   },
 ];
 
@@ -64,6 +65,7 @@ const metaColumns: MetaColumn[] = [
 const copyrightColumns: CopyrightColumn[] = [
   { key: "isAuthorUnknown", label: "권리자 불명 여부", width: "w-28" },
   { key: "hasCopyright", label: "저작권 여부", width: "w-24" },
+  { key: "copyrightReason", label: "저작권 여부 판단 근거", width: "w-48" },
 ];
 
 const formFields: FormField[] = [
@@ -151,7 +153,8 @@ export default function Monograph() {
             remark: responseItem.remark,
             webSearchUtilized: responseItem.webSearchUtilized,
             isAuthorUnknown: responseItem.isAuthorUnknown,
-            hasCopyright: responseItem.hasCopyright,
+            hasCopyright: responseItem.copyrightInfo.has_copyright,
+            copyrightReason: responseItem.copyrightInfo.reason,
           };
           successCount++;
         } catch (error) {
@@ -162,6 +165,7 @@ export default function Monograph() {
             ...item,
             hasCopyright: null,
             isAuthorUnknown: null,
+            copyrightReason: null,
           };
         } finally {
           completedCount++;
@@ -219,6 +223,7 @@ export default function Monograph() {
       webSearchUtilized: null,
       isAuthorUnknown: null,
       hasCopyright: null,
+      copyrightReason: null,
     };
 
     setData((prev) => [...prev, newItem]);
@@ -249,6 +254,7 @@ export default function Monograph() {
         webSearchUtilized: null,
         isAuthorUnknown: null,
         hasCopyright: null,
+        copyrightReason: null,
       }),
     );
 

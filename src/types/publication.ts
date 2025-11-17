@@ -28,6 +28,7 @@ export interface SerialPublication extends BaseBookData {
   // 저작권 결과
   isAuthorUnknown?: boolean | null; // lastAffiliation 여부에 따라 결정
   hasCopyright?: boolean | null; // API 성공 여부에 따라 결정
+  copyrightReason?: string | null; // 저작권 여부 판단 근거
 }
 
 // 단행본 전용 인터페이스 (articleTitle 제외)
@@ -52,4 +53,5 @@ export interface MonographPublication extends BaseBookData {
   // 저작권 결과 (향후 필요 시 활용)
   isAuthorUnknown: boolean | null;
   hasCopyright: boolean | null;
+  copyrightReason?: string | null; // 저작권 여부 판단 근거
 }

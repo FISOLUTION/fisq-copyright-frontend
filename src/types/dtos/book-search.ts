@@ -12,6 +12,12 @@ export interface SerialRequestItem extends BaseSearchRequestItem {
 
 export type MonographRequestItem = BaseSearchRequestItem;
 
+export interface CopyrightInfo {
+  code: string;
+  has_copyright: boolean;
+  reason: string;
+}
+
 export interface BookSearchResponseItem {
   authorType: string | null;
   birthYear: string | null;
@@ -22,5 +28,5 @@ export interface BookSearchResponseItem {
   remark: string | null;
   webSearchUtilized: boolean | null;
   isAuthorUnknown: boolean | null;
-  hasCopyright: boolean | null;
+  copyrightInfo: CopyrightInfo;
 }
